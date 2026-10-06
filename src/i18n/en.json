@@ -1,0 +1,161 @@
+{
+  "home": {
+    "title1": "Ceramic",
+    "title2": "Relax",
+    "tagline": "A cozy little corner to shape clay, no rush.",
+    "start": "Start",
+    "note": "No score, no timer, no mistakes."
+  },
+  "lang": {
+    "label": "Language",
+    "pt": "PT",
+    "en": "EN"
+  },
+  "common": {
+    "home": "Home",
+    "undo": "Undo"
+  },
+  "modeling": {
+    "ready": "Done, let's paint!",
+    "hint": {
+      "stoppedDesktop": "Hold SPACE to spin the wheel",
+      "stoppedTouch": "Slide the pedal up to spin the wheel",
+      "sideDesktop": "Hover the side to thin · click and drag to widen",
+      "sideTouch": "Slide one finger on the side to thin · two fingers widen",
+      "topDesktop": "Drag the top to stretch or flatten · click the top to open it",
+      "topTouch": "Drag the top to stretch · tap the top to open it"
+    }
+  },
+  "wheel": {
+    "label": "Wheel",
+    "stopped": "Stopped",
+    "slow": "Slow",
+    "medium": "Medium",
+    "fast": "Fast",
+    "key": "SPACE",
+    "hold": "hold to spin",
+    "pedal": "Pedal",
+    "pedalHint": "Wheel pedal: slide up to spin faster"
+  },
+  "painting": {
+    "back": "Back to shaping",
+    "sideLabel": "Side of the piece",
+    "outside": "Outside",
+    "inside": "Inside",
+    "toolsLabel": "Tools",
+    "sizeLabel": "Size",
+    "paletteLabel": "Colors",
+    "stampLabel": "Stamp",
+    "tools": {
+      "brush": "Brush",
+      "bands": "Bands",
+      "stamp": "Stamps",
+      "bucket": "Bucket",
+      "eraser": "Eraser"
+    },
+    "sizes": {
+      "S": "S",
+      "M": "M",
+      "L": "L"
+    },
+    "sizeNames": {
+      "S": "Small",
+      "M": "Medium",
+      "L": "Large"
+    },
+    "stamps": {
+      "star": "Star",
+      "heart": "Heart",
+      "flower": "Flower",
+      "drop": "Drop",
+      "leaf": "Leaf",
+      "dot": "Dot"
+    },
+    "colors": {
+      "cream": "Cream white",
+      "pink": "Pink",
+      "coral": "Coral",
+      "peach": "Peach",
+      "butter": "Butter yellow",
+      "mint": "Mint green",
+      "sage": "Sage green",
+      "sky": "Sky blue",
+      "lavender": "Lavender blue",
+      "lilac": "Lilac",
+      "caramel": "Caramel brown",
+      "graphite": "Soft graphite"
+    },
+    "glazeHint": "Colors get brighter after the kiln",
+    "glazeHintShort": "Colors brighten in the kiln",
+    "wheelHint": {
+      "brush": "spin and paint rings",
+      "bands": "spin and make bands",
+      "stamp": "spin and repeat around",
+      "bucket": "spin and let it drip",
+      "eraser": "spin and erase rings"
+    },
+    "toKiln": "Take to the kiln",
+    "toast": {
+      "bandsNeedSpin": "Spin the wheel to make bands"
+    },
+    "confirm": {
+      "title": "Back to shaping?",
+      "body": "This piece's painting will be erased.",
+      "cancel": "Keep painting",
+      "ok": "Erase and go back"
+    }
+  },
+  "kiln": {
+    "back": "Back to painting",
+    "title": "Which finish do you like?",
+    "subtitle": "The preview shows the effect. The final colors appear when the piece leaves the kiln.",
+    "subtitleShort": "Final colors appear when the piece leaves the kiln.",
+    "finishLabel": "Finish",
+    "glossy": "Glossy",
+    "glossyDesc": "Shiny reflections, glassy look.",
+    "matte": "Matte",
+    "matteDesc": "Velvety touch, no reflections.",
+    "fire": "Light the kiln",
+    "note": "Takes about 7 seconds. Tap the screen to skip.",
+    "noteShort": "About 7 seconds. Tap to skip.",
+    "skip": "Tap the screen to skip",
+    "skipLabel": "Skip the kiln animation"
+  },
+  "result": {
+    "badge": "Out of the kiln · {{finish}}",
+    "title": "What a lovely piece!",
+    "drag": "Drag to spin and pick the best angle",
+    "dragShort": "Drag to spin",
+    "save": "Save image",
+    "saving": "Preparing…",
+    "again": "Make another piece",
+    "note": "1080 × 1350 PNG with a soft frame and a small logo",
+    "saved": "Image saved!",
+    "shared": "Image shared!",
+    "error": "Couldn't save the image. Please try again."
+  },
+  "options": {
+    "title": "Options",
+    "open": "Options",
+    "close": "Close",
+    "done": "Done",
+    "sound": "Sound",
+    "music": "Music",
+    "effects": "Effects",
+    "language": "Language",
+    "comfort": "Comfort",
+    "wheelAlwaysOn": "Wheel always on",
+    "wheelAlwaysOnDesc": "Spins without holding SPACE or the pedal.",
+    "reduceMotion": "Reduce motion",
+    "reduceMotionDesc": "Less camera movement and particles.",
+    "vibration": "Vibration",
+    "vibrationDesc": "A gentle buzz while shaping (on phones).",
+    "vibrationDescShort": "A gentle buzz while shaping.",
+    "soundOn": "Turn sound on",
+    "soundOff": "Turn sound off",
+    "langNames": {
+      "pt": "Português",
+      "en": "English"
+    }
+  }
+}

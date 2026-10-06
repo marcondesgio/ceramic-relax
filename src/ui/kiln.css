@@ -1,0 +1,301 @@
+/* Forno (escolha do acabamento), queima e resultado */
+
+.screen-title {
+  margin: 0;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: clamp(30px, 4.2vw, 60px);
+  line-height: 1.05;
+  color: var(--text);
+  text-align: center;
+  text-wrap: balance;
+}
+.screen-subtitle {
+  margin: 8px 0 0;
+  font-size: clamp(14px, 1.4vw, 18px);
+  text-align: center;
+  color: var(--text);
+}
+
+/* ---------- escolha do acabamento ---------- */
+.kiln-screen__center {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--gap) + var(--safe-top) + 64px);
+  transform: translateX(-50%);
+  width: min(880px, calc(100% - 2 * var(--gap)));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+.kiln-screen__center > * {
+  pointer-events: auto;
+}
+.finish-cards {
+  margin-top: clamp(16px, 3vh, 36px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(12px, 2.5vw, 40px);
+  width: 100%;
+}
+.finish-card {
+  appearance: none;
+  border: 3px solid transparent;
+  position: relative;
+  padding: 14px 14px 18px;
+  border-radius: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  color: var(--text);
+  font-family: var(--font-body);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    transform 140ms ease,
+    border-color 160ms,
+    box-shadow 160ms;
+}
+.finish-card:active {
+  transform: translateY(3px) scale(0.98);
+}
+.finish-card[aria-checked='true'] {
+  border-color: var(--clay);
+  box-shadow:
+    0 6px 0 var(--btn-base),
+    0 18px 40px rgba(107, 79, 63, 0.14);
+}
+.finish-card__preview {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 5 / 4;
+  border-radius: 26px;
+  overflow: hidden;
+}
+.finish-card--glossy .finish-card__preview {
+  background: #ece8fb;
+}
+.finish-card--matte .finish-card__preview {
+  background: #e5efe2;
+}
+.finish-card__preview img {
+  width: 82%;
+  height: 100%;
+  object-fit: contain;
+}
+.finish-card__loading {
+  width: 40%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 251, 245, 0.7);
+  animation: soft-pulse 1.2s ease-in-out infinite;
+}
+@keyframes soft-pulse {
+  50% {
+    transform: scale(0.85);
+    opacity: 0.5;
+  }
+}
+/* brilhinhos decorativos no cartão brilhante */
+.finish-card__sparkles::before,
+.finish-card__sparkles::after {
+  content: '✦';
+  position: absolute;
+  color: #fff;
+  font-size: 22px;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+}
+.finish-card__sparkles::before {
+  top: 22%;
+  left: 18%;
+}
+.finish-card__sparkles::after {
+  top: 18%;
+  right: 20%;
+  font-size: 14px;
+}
+.finish-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 52px 0 6px;
+}
+.finish-card__text strong {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(22px, 2.4vw, 34px);
+  line-height: 1.1;
+}
+.finish-card__text span {
+  font-size: clamp(13px, 1.2vw, 16px);
+}
+.finish-card__check {
+  position: absolute;
+  right: 20px;
+  bottom: 24px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 3px solid var(--bisque);
+  display: grid;
+  place-items: center;
+  color: var(--text-strong);
+}
+.finish-card[aria-checked='true'] .finish-card__check {
+  background: var(--clay);
+  border-color: var(--clay);
+}
+
+.kiln-screen__bottom,
+.result-hud__bottom {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--gap) + var(--safe-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: min(640px, calc(100% - 2 * var(--gap)));
+  pointer-events: none;
+}
+.kiln-screen__bottom > *,
+.result-hud__actions {
+  pointer-events: auto;
+}
+.kiln-screen__bottom .btn--primary {
+  min-width: 300px;
+}
+.kiln-screen__note {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-soft);
+  text-align: center;
+  text-shadow: 0 0 10px var(--cream);
+}
+
+/* ---------- queima ---------- */
+.firing-overlay {
+  position: fixed;
+  inset: 0;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: calc(var(--gap) + var(--safe-bottom) + 12px);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.firing-overlay:focus-visible {
+  outline: none;
+}
+.firing-overlay .hint {
+  pointer-events: none;
+  opacity: 0.9;
+  animation: hint-in 600ms 1.2s ease both;
+}
+
+/* ---------- resultado ---------- */
+.result-hud__head {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--gap) + var(--safe-top) + 8px);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: min(720px, calc(100% - 2 * var(--gap) - 120px));
+  pointer-events: none;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: var(--sage);
+  color: var(--text-strong);
+  font-weight: 800;
+  font-size: 15px;
+}
+.result-hud__bottom .hint {
+  pointer-events: none;
+}
+.result-hud__actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 6px;
+}
+.result-hud__actions .btn {
+  min-width: 250px;
+  min-height: 64px;
+  font-size: 22px;
+}
+
+/* ---------- celular ---------- */
+.hud--touch.kiln-screen .kiln-screen__center {
+  top: calc(var(--gap) + var(--safe-top) + 60px);
+}
+.hud--touch .finish-card {
+  padding: 8px 8px 12px;
+  border-radius: 26px;
+  gap: 8px;
+}
+.hud--touch .finish-card__preview {
+  aspect-ratio: 1;
+  border-radius: 20px;
+}
+.hud--touch .finish-card__text {
+  padding: 0 4px;
+}
+.hud--touch .finish-card__check {
+  top: 16px;
+  right: 16px;
+  bottom: auto;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 251, 245, 0.85);
+}
+.hud--touch .kiln-screen__bottom .btn--primary,
+.hud--touch .result-hud__actions .btn {
+  width: 100%;
+  min-width: 0;
+}
+.hud--touch .result-hud__head {
+  top: calc(var(--gap) + var(--safe-top) + 64px);
+  width: calc(100% - 2 * var(--gap));
+}
+.hud--touch .result-hud__actions {
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+}
+.hud--touch .result-hud__actions .btn {
+  font-size: 19px;
+}
+
+/* véu creme suave: faz o papel do fundo desfocado do design e ajuda a leitura */
+.kiln-screen::before,
+.result-hud::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.kiln-screen::before {
+  background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(255, 244, 230, 0.78), rgba(255, 244, 230, 0.35));
+}
+.result-hud::before {
+  background: linear-gradient(rgba(255, 244, 230, 0.75), rgba(255, 244, 230, 0) 28%, rgba(255, 244, 230, 0) 70%, rgba(255, 244, 230, 0.6));
+}
+.kiln-screen > *,
+.result-hud > * {
+  position: absolute;
+  z-index: 1;
+}

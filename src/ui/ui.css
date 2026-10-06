@@ -1,0 +1,203 @@
+/* Tokens do mini design system (docs/Ceramic Relax — Interface.pdf) */
+:root {
+  --cream: #fff4e6;
+  --peach: #ffd9c0;
+  --sage: #c9ddc4;
+  --lavender: #d9d2f0;
+  --clay: #e3a587;
+  --bisque: #ebd9c4;
+  --surface: #fffbf5;
+  --text: #6b4f3f;
+  --text-strong: #4a3328;
+  --text-soft: #7d6252;
+  --btn-base: #c98b6e;
+  --card-base: #e2cdb5;
+  --focus: #9f8fdb;
+
+  --font-title: 'Baloo 2', 'Nunito', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, sans-serif;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --gap: clamp(12px, 2.5vw, 28px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--cream);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 600;
+  /* jogo em tela cheia: sem rolagem, zoom ou seleção de texto */
+  overscroll-behavior: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+.game-canvas {
+  position: fixed !important;
+  inset: 0;
+  touch-action: none;
+}
+
+/* camada da interface por cima do canvas; só os controles recebem toque */
+.ui-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  padding: calc(var(--gap) + var(--safe-top)) var(--gap) calc(var(--gap) + var(--safe-bottom));
+}
+.ui-layer > * {
+  pointer-events: auto;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* ---------- botões em pílula ---------- */
+.btn {
+  --base: var(--card-base);
+  appearance: none;
+  border: 0;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(17px, 1.6vw, 22px);
+  color: var(--text);
+  background: var(--surface);
+  box-shadow:
+    0 5px 0 var(--base),
+    0 10px 22px rgba(107, 79, 63, 0.12);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    opacity 160ms;
+}
+.btn svg {
+  flex: none;
+}
+/* squish: desce 4 px e achata 7% */
+.btn:active:not(:disabled) {
+  transform: translateY(4px) scaleY(0.93);
+  box-shadow:
+    0 1px 0 var(--base),
+    0 4px 10px rgba(107, 79, 63, 0.1);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.btn--primary {
+  --base: var(--btn-base);
+  background: var(--clay);
+  color: var(--text-strong);
+  min-height: 56px;
+  padding: 0 30px;
+}
+.btn--icon {
+  width: 56px;
+  height: 56px;
+  padding: 0;
+}
+
+/* ---------- alternância (PT/EN) ---------- */
+.segmented {
+  display: inline-flex;
+  padding: 5px;
+  gap: 4px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow:
+    0 5px 0 var(--card-base),
+    0 10px 22px rgba(107, 79, 63, 0.1);
+}
+.segmented button {
+  appearance: none;
+  border: 0;
+  min-width: 56px;
+  min-height: 46px;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 17px;
+  color: var(--text-soft);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 160ms, transform 120ms;
+}
+.segmented button[aria-pressed='true'] {
+  background: var(--peach);
+  color: var(--text-strong);
+}
+.segmented button:active {
+  transform: scale(0.94);
+}
+
+/* ---------- cartões, dicas ---------- */
+.card {
+  background: var(--surface);
+  border-radius: 36px;
+  box-shadow:
+    0 6px 0 var(--card-base),
+    0 18px 40px rgba(107, 79, 63, 0.12);
+}
+
+.hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  min-height: 44px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow:
+    0 4px 0 var(--card-base),
+    0 8px 18px rgba(107, 79, 63, 0.08);
+  font-size: clamp(13px, 1.3vw, 17px);
+  color: var(--text);
+  text-align: center;
+  animation: hint-in 320ms ease both;
+}
+@keyframes hint-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.caption {
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "home": {
+    "title1": "Ceramic",
+    "title2": "Relax",
+    "tagline": "Um cantinho para modelar argila sem pressa.",
+    "start": "Começar",
+    "note": "Sem pontuação, sem tempo, sem erro."
+  },
+  "lang": {
+    "label": "Idioma",
+    "pt": "PT",
+    "en": "EN"
+  },
+  "common": {
+    "home": "Início",
+    "undo": "Desfazer"
+  },
+  "modeling": {
+    "ready": "Pronto, vamos pintar!",
+    "hint": {
+      "stoppedDesktop": "Segure ESPAÇO para girar o torno",
+      "stoppedTouch": "Deslize o pedal para cima para girar o torno",
+      "sideDesktop": "Passe o mouse na lateral para afinar · clique e arraste para alargar",
+      "sideTouch": "Deslize um dedo na lateral para afinar · dois dedos alargam",
+      "topDesktop": "Arraste no topo para esticar ou achatar · clique no topo para abrir a boca",
+      "topTouch": "Arraste no topo para esticar · toque no topo para abrir a boca"
+    }
+  },
+  "wheel": {
+    "label": "Torno",
+    "stopped": "Parado",
+    "slow": "Lento",
+    "medium": "Médio",
+    "fast": "Rápido",
+    "key": "ESPAÇO",
+    "hold": "segure para girar",
+    "pedal": "Pedal",
+    "pedalHint": "Pedal do torno: deslize para cima para girar mais rápido"
+  },
+  "painting": {
+    "back": "Voltar a modelar",
+    "sideLabel": "Lado da peça",
+    "outside": "Fora",
+    "inside": "Dentro",
+    "toolsLabel": "Ferramentas",
+    "sizeLabel": "Tamanho",
+    "paletteLabel": "Cores",
+    "stampLabel": "Carimbo",
+    "tools": {
+      "brush": "Pincel",
+      "bands": "Faixas",
+      "stamp": "Carimbos",
+      "bucket": "Balde",
+      "eraser": "Borracha"
+    },
+    "sizes": {
+      "S": "P",
+      "M": "M",
+      "L": "G"
+    },
+    "sizeNames": {
+      "S": "Pequeno",
+      "M": "Médio",
+      "L": "Grande"
+    },
+    "stamps": {
+      "star": "Estrela",
+      "heart": "Coração",
+      "flower": "Flor",
+      "drop": "Gota",
+      "leaf": "Folha",
+      "dot": "Bolinha"
+    },
+    "colors": {
+      "cream": "Branco creme",
+      "pink": "Rosa",
+      "coral": "Coral",
+      "peach": "Pêssego",
+      "butter": "Amarelo manteiga",
+      "mint": "Verde menta",
+      "sage": "Verde sálvia",
+      "sky": "Azul céu",
+      "lavender": "Azul lavanda",
+      "lilac": "Lilás",
+      "caramel": "Marrom caramelo",
+      "graphite": "Grafite suave"
+    },
+    "glazeHint": "As cores ficam mais vivas depois do forno",
+    "glazeHintShort": "As cores ficam vivas no forno",
+    "wheelHint": {
+      "brush": "gira e pinta anéis",
+      "bands": "gira e faz faixas",
+      "stamp": "gira e repete ao redor",
+      "bucket": "gira e a cor escorre",
+      "eraser": "gira e apaga anéis"
+    },
+    "toKiln": "Levar ao forno",
+    "toast": {
+      "bandsNeedSpin": "Gire o torno para fazer faixas"
+    },
+    "confirm": {
+      "title": "Voltar a modelar?",
+      "body": "A pintura desta peça será apagada.",
+      "cancel": "Continuar pintando",
+      "ok": "Apagar e voltar"
+    }
+  },
+  "kiln": {
+    "back": "Voltar à pintura",
+    "title": "Qual acabamento você prefere?",
+    "subtitle": "A prévia mostra o efeito. A cor final aparece quando a peça sai do forno.",
+    "subtitleShort": "A cor final aparece quando a peça sai do forno.",
+    "finishLabel": "Acabamento",
+    "glossy": "Brilhante",
+    "glossyDesc": "Reflexo marcado, aspecto vitrificado.",
+    "matte": "Fosco",
+    "matteDesc": "Toque aveludado, sem reflexo.",
+    "fire": "Acender o forno",
+    "note": "Leva uns 7 segundinhos. Toque na tela para pular.",
+    "noteShort": "Leva uns 7 segundinhos. Toque para pular.",
+    "skip": "Toque na tela para pular",
+    "skipLabel": "Pular a animação do forno"
+  },
+  "result": {
+    "badge": "Saiu do forno · {{finish}}",
+    "title": "Que peça linda!",
+    "drag": "Arraste para girar e escolher o melhor ângulo",
+    "dragShort": "Arraste para girar",
+    "save": "Salvar imagem",
+    "saving": "Preparando…",
+    "again": "Fazer outra peça",
+    "note": "PNG 1080 × 1350 com moldura suave e logo no canto",
+    "saved": "Imagem salva!",
+    "shared": "Imagem compartilhada!",
+    "error": "Não deu para salvar a imagem. Tente de novo."
+  },
+  "options": {
+    "title": "Opções",
+    "open": "Opções",
+    "close": "Fechar",
+    "done": "Pronto",
+    "sound": "Som",
+    "music": "Música",
+    "effects": "Efeitos",
+    "language": "Idioma",
+    "comfort": "Conforto",
+    "wheelAlwaysOn": "Torno sempre ligado",
+    "wheelAlwaysOnDesc": "Gira sem segurar ESPAÇO ou o pedal.",
+    "reduceMotion": "Reduzir animações",
+    "reduceMotionDesc": "Menos movimento de câmera e partículas.",
+    "vibration": "Vibração",
+    "vibrationDesc": "Leve tremidinha ao moldar (no celular).",
+    "vibrationDescShort": "Leve tremidinha ao moldar.",
+    "soundOn": "Ligar o som",
+    "soundOff": "Desligar o som",
+    "langNames": {
+      "pt": "Português",
+      "en": "English"
+    }
+  }
+}

@@ -1,0 +1,369 @@
+/* Layout das telas. Cada bloco é posicionado sozinho para não cobrir o canvas. */
+
+.ui-layer > .hud__hint,
+.ui-layer > .home__center {
+  pointer-events: none;
+}
+.home__center > * {
+  pointer-events: auto;
+}
+
+/* ---------- tela inicial ---------- */
+.home__top {
+  position: absolute;
+  top: calc(var(--gap) + var(--safe-top));
+  right: var(--gap);
+  display: flex;
+  gap: 12px;
+}
+.home__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  /* sobe um pouco para deixar o torno aparecendo embaixo */
+  transform: translateY(-6vh);
+}
+.home__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px clamp(28px, 6vw, 80px) 44px;
+  text-align: center;
+  max-width: 560px;
+  width: 100%;
+}
+.logo {
+  margin: 6px 0 4px;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: clamp(56px, 9vw, 84px);
+  line-height: 0.95;
+  color: var(--text);
+}
+.logo__accent {
+  color: #bf6a4c;
+}
+.home__tagline {
+  margin: 10px 0 0;
+  font-size: clamp(16px, 1.6vw, 20px);
+  color: var(--text);
+}
+.home__start {
+  margin-top: -28px;
+  min-width: 240px;
+  font-size: 24px;
+  min-height: 64px;
+}
+.home__note {
+  margin: 18px 0 0;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(255, 251, 245, 0.85);
+  font-size: 15px;
+}
+
+/* ---------- HUD de modelagem (desktop) ---------- */
+.hud__top {
+  position: absolute;
+  top: calc(var(--gap) + var(--safe-top));
+  left: var(--gap);
+  right: var(--gap);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+.hud__top > * {
+  pointer-events: auto;
+}
+.hud__spacer {
+  flex: 1;
+}
+.hud__hint {
+  position: absolute;
+  top: calc(var(--gap) + var(--safe-top) + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  /* espaço para o botão de início à esquerda e som + opções à direita */
+  max-width: calc(100% - 2 * var(--gap) - 300px);
+}
+
+.hud__tools {
+  position: absolute;
+  left: var(--gap);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 10px;
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tool {
+  appearance: none;
+  border: 0;
+  width: 84px;
+  min-height: 76px;
+  border-radius: 22px;
+  background: transparent;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    transform 120ms,
+    background 160ms,
+    opacity 160ms;
+}
+.tool:hover:not(:disabled) {
+  background: var(--cream);
+}
+.tool:active:not(:disabled) {
+  transform: translateY(3px) scaleY(0.93);
+  background: var(--peach);
+}
+.tool:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.hud__wheel {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--gap) + var(--safe-bottom));
+  transform: translateX(-50%);
+}
+.hud__ready {
+  position: absolute;
+  right: var(--gap);
+  bottom: calc(var(--gap) + var(--safe-bottom));
+}
+
+/* ---------- indicador do torno ---------- */
+.wheel-ind {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 22px 10px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow:
+    0 5px 0 var(--card-base),
+    0 10px 22px rgba(107, 79, 63, 0.1);
+  white-space: nowrap;
+}
+.wheel-ind__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--sage);
+  color: var(--text-strong);
+}
+.wheel-ind__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.wheel-ind__text strong,
+.wheel-ind--compact strong {
+  font-family: var(--font-title);
+  font-size: 20px;
+  font-weight: 700;
+  min-width: 64px;
+}
+.wheel-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+.wheel-bars span {
+  width: 9px;
+  border-radius: 9px;
+  background: var(--bisque);
+  transition: background 160ms;
+}
+.wheel-bars span.on {
+  background: var(--clay);
+}
+.wheel-ind__sep {
+  width: 2px;
+  height: 32px;
+  border-radius: 2px;
+  background: var(--bisque);
+}
+.keycap {
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: 2px solid var(--card-base);
+  box-shadow: 0 3px 0 var(--card-base);
+  color: var(--text);
+  background: var(--surface);
+}
+.wheel-ind__hold {
+  font-size: 15px;
+}
+.wheel-ind--compact {
+  padding: 6px 18px 6px 6px;
+  gap: 10px;
+}
+.wheel-ind--compact .wheel-ind__icon {
+  width: 40px;
+  height: 40px;
+}
+.wheel-ind--compact strong {
+  font-size: 18px;
+  min-width: 0;
+}
+
+/* ---------- pedal virtual ---------- */
+.pedal {
+  width: 112px;
+  padding: 12px 10px 10px;
+  border-radius: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.pedal__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: var(--text);
+}
+.pedal__track {
+  position: relative;
+  width: 92px;
+  height: clamp(150px, 24vh, 210px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  touch-action: none;
+  cursor: ns-resize;
+  border-radius: 24px;
+}
+.pedal__zone {
+  flex: 1;
+  border-radius: 20px;
+  background: #f3e6d6;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-soft);
+  transition: background 160ms;
+}
+.pedal__zone.on {
+  background: var(--peach);
+  color: var(--text-strong);
+}
+.pedal__handle {
+  position: absolute;
+  left: 50%;
+  width: 56px;
+  height: 56px;
+  margin-left: -28px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 4px solid var(--bisque);
+  box-shadow: 0 4px 10px rgba(107, 79, 63, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  pointer-events: none;
+  transition: border-color 160ms;
+}
+.pedal__handle.on {
+  border-color: var(--clay);
+}
+.pedal__handle i {
+  width: 3px;
+  height: 16px;
+  border-radius: 3px;
+  background: var(--card-base);
+}
+
+/* ---------- celular / toque ---------- */
+.hud--touch .hud__hint {
+  top: calc(var(--gap) + var(--safe-top) + 72px);
+  max-width: calc(100% - 2 * var(--gap));
+}
+.hud--touch .hud__top {
+  justify-content: space-between;
+}
+.hud--touch .hud__pedal {
+  position: absolute;
+  right: var(--gap);
+  bottom: calc(var(--gap) + var(--safe-bottom));
+}
+.hud--touch .hud__tools {
+  top: auto;
+  transform: none;
+  bottom: calc(var(--gap) + var(--safe-bottom) + 92px);
+  right: calc(var(--gap) + 128px);
+  flex-direction: row;
+  justify-content: space-around;
+  border-radius: 28px;
+  padding: 6px;
+}
+.hud--touch .tool {
+  width: auto;
+  flex: 1;
+  min-height: 64px;
+}
+.hud--touch .hud__ready {
+  left: var(--gap);
+  right: calc(var(--gap) + 128px);
+}
+.hud--touch .hud__ready .btn {
+  width: 100%;
+  font-size: 17px;
+  padding: 0 12px;
+  gap: 8px;
+  white-space: nowrap;
+  min-height: 64px;
+}
+
+/* telas largas com toque (tablet deitado): ferramentas voltam para a lateral */
+@media (min-width: 900px) {
+  .hud--touch .hud__tools {
+    top: 50%;
+    bottom: auto;
+    right: auto;
+    transform: translateY(-50%);
+    flex-direction: column;
+  }
+  .hud--touch .tool {
+    width: 84px;
+  }
+  .hud--touch .hud__ready {
+    left: auto;
+    right: calc(var(--gap) + 136px);
+  }
+  .hud--touch .hud__ready .btn {
+    width: auto;
+  }
+}
