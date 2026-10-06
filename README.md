@@ -2,6 +2,8 @@
 
 Jogo web 3D relaxante de modelagem de cerâmica (React + React Three Fiber). Design em `docs/`.
 
+Jogue agora: https://ceramic-relax.vercel.app/
+
 ## Rodar
 
 ```bash
