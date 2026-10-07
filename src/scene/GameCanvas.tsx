@@ -12,6 +12,7 @@ import { Wheel } from '../wheel/Wheel'
 import { WheelController } from '../wheel/WheelController'
 import { AudioDriver } from '../audio/AudioDriver'
 import { Kiln } from '../kiln/Kiln'
+import { kilnRuntime } from '../kiln/kilnRuntime'
 import { Shelf } from '../kiln/Shelf'
 import { FiringController } from '../kiln/FiringController'
 import { FiringEffects } from '../kiln/FiringEffects'
@@ -20,6 +21,8 @@ import { ResultController } from '../kiln/ResultController'
 import { StudioEnv } from '../kiln/StudioEnv'
 import { Atelier } from './Atelier'
 import { sceneRuntime } from './sceneRuntime'
+import { TimeController } from './TimeController'
+import { timeRuntime } from './timeOfDay'
 import { CameraRig } from './CameraRig'
 import { Effects } from './Effects'
 import { Lights } from './Lights'
@@ -42,10 +45,12 @@ export function GameCanvas() {
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       onCreated={(state) => {
         state.gl.toneMapping = NeutralToneMapping
+        // a paisagem da janela usa planos de corte por material
+        state.gl.localClippingEnabled = true
         // inspeção pelo console durante o desenvolvimento
         sceneRuntime.gl = state.gl
         sceneRuntime.scene = state.scene
-        if (import.meta.env.DEV) Object.assign(window, { __r3f: state, __pottery: potteryRuntime })
+        if (import.meta.env.DEV) Object.assign(window, { __r3f: state, __pottery: potteryRuntime, __kiln: kilnRuntime, __time: timeRuntime })
       }}
     >
       {/* fps caiu: baixa a resolução e desliga o pós-processamento */}
@@ -67,6 +72,8 @@ export function GameCanvas() {
       <color attach="background" args={['#FFF4E6']} />
       <fog attach="fog" args={['#FFF4E6', 14, 32]} />
 
+      {/* o relógio do dia vem antes de tudo que lê a paleta */}
+      <TimeController />
       <Lights />
       <Atelier />
       <Wheel />
