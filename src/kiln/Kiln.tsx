@@ -1,11 +1,14 @@
 import { useEffect, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Color, MathUtils, type Group, type Mesh, type MeshStandardMaterial, type PointLight } from 'three'
+import { Color, DoubleSide, MathUtils, type Group, type Mesh, type MeshStandardMaterial, type PointLight } from 'three'
 import { DOOR_CENTER_Y, DOOR_RADIUS, DOOR_Z, KILN_POS, KILN_ROT_Y } from './kilnLayout'
 import { kilnRuntime } from './kilnRuntime'
 
-const PEACH = '#FFD9C0'
-const PEACH_DARK = '#F2C3A9'
+// paleta: corpo em azul céu, acabamentos em amarelo manteiga
+const BODY = '#B9DDF2'
+const TRIM = '#FBE3A0'
+/** interior escuro atrás da porta: o mesmo azul, mais profundo */
+const INSIDE = '#8DB4D2'
 const CREAM = '#FFF4E6'
 const FACE = '#6B4F3F' // marrom suave: nada de preto
 const BLUSH = '#F4A08E'
@@ -13,6 +16,9 @@ const RED = '#F08A7A'
 
 const BODY_R = 1.18
 const BODY_DEPTH = 0.78 // achata o cilindro na frente (fica oval visto de cima)
+/** boca atrás da porta: raio e profundidade (logo à frente do ponto mais saliente do corpo) */
+const MOUTH_R = DOOR_RADIUS * 0.83 // acima da faixa amarela da base
+const MOUTH_Z = BODY_R * BODY_DEPTH + 0.015
 
 const ORANGE = new Color('#FF9A4D')
 const GOLD = new Color('#FFD36B')
@@ -48,27 +54,51 @@ function Face({ y, z, scale = 1, blink }: { y: number; z: number; scale?: number
   )
 }
 
-/** Termômetro sorridente ao lado do forno */
+/** Termômetro sorridente ao lado do forno: a coluna sobe e brilha junto com a janelinha */
 function Thermometer() {
   const fill = useRef<Mesh>(null)
+  const fillMat = useRef<MeshStandardMaterial>(null)
+  const bulbMat = useRef<MeshStandardMaterial>(null)
+  const glassMat = useRef<MeshStandardMaterial>(null)
+
   useEffect(() => {
     kilnRuntime.thermoFill = fill.current
   }, [])
+
+  useFrame(({ clock }) => {
+    const hot = MathUtils.clamp(kilnRuntime.heat, 0, 1)
+    // pulsa de leve enquanto esquenta, como a janelinha "respirando"
+    const pulse = 1 + Math.sin(clock.elapsedTime * 6) * 0.12 * hot
+    // mesma passagem de cor da janelinha: laranja → dourado
+    const k = MathUtils.smoothstep(hot, 0.35, 1)
+    for (const m of [fillMat.current, bulbMat.current]) {
+      if (!m) continue
+      m.emissive.copy(ORANGE).lerp(GOLD, k)
+      // um brilhinho mínimo em repouso para o termômetro não parecer apagado
+      m.emissiveIntensity = 0.12 + hot * 1.15 * pulse
+    }
+    if (glassMat.current) {
+      glassMat.current.emissive.copy(GOLD)
+      glassMat.current.emissiveIntensity = hot * 0.4 * pulse
+      glassMat.current.opacity = 0.4 + hot * 0.25
+    }
+  })
+
   return (
     <group position={[1.62, 0, 0.45]}>
       <mesh position={[0, 1.25, 0]} castShadow>
         <capsuleGeometry args={[0.11, 1.3, 8, 16]} />
-        {/* vidro: transparente o bastante para ver a coluna subir */}
-        <meshStandardMaterial color={CREAM} roughness={0.3} transparent opacity={0.4} depthWrite={false} />
+        {/* vidro: transparente o bastante para ver a coluna subir; ganha um halo quente na queima */}
+        <meshStandardMaterial ref={glassMat} color={CREAM} roughness={0.3} transparent opacity={0.4} depthWrite={false} />
       </mesh>
       {/* coluna vermelha: a altura acompanha o calor */}
       <mesh ref={fill} position={[0, 0.55, 0.02]}>
         <cylinderGeometry args={[0.055, 0.055, 1, 12]} />
-        <Mat color={RED} rough={0.5} />
+        <meshStandardMaterial ref={fillMat} color={RED} roughness={0.5} />
       </mesh>
       <mesh position={[0, 0.48, 0]} castShadow>
         <sphereGeometry args={[0.22, 24, 16]} />
-        <Mat color={RED} rough={0.5} />
+        <meshStandardMaterial ref={bulbMat} color={RED} roughness={0.5} />
       </mesh>
       <Face y={0.46} z={0.2} scale={0.5} />
     </group>
@@ -130,37 +160,37 @@ export function Kiln() {
         ].map(([x, z], i) => (
           <mesh key={i} position={[x, 0.12, z]} castShadow>
             <cylinderGeometry args={[0.13, 0.15, 0.24, 16]} />
-            <Mat color="#E8C39A" />
+            <Mat color={TRIM} />
           </mesh>
         ))}
         {/* corpo redondo: cilindro achatado na frente + cúpula + borda de baixo arredondada */}
         <group scale={[1, 1, BODY_DEPTH]}>
           <mesh position={[0, 1.2, 0]} castShadow receiveShadow>
             <cylinderGeometry args={[BODY_R, BODY_R, 1.9, 48]} />
-            <Mat color={PEACH} />
+            <Mat color={BODY} />
           </mesh>
           <mesh position={[0, 2.15, 0]} castShadow>
             <sphereGeometry args={[BODY_R, 48, 20, 0, Math.PI * 2, 0, Math.PI / 2]} />
-            <Mat color={PEACH} />
+            <Mat color={BODY} />
           </mesh>
           <mesh position={[0, 0.27, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
             <torusGeometry args={[BODY_R - 0.1, 0.1, 12, 48]} />
-            <Mat color={PEACH} />
+            <Mat color={BODY} />
           </mesh>
           <mesh position={[0, 0.2, 0]}>
             <cylinderGeometry args={[BODY_R - 0.1, BODY_R - 0.1, 0.12, 48]} />
-            <Mat color={PEACH} />
+            <Mat color={BODY} />
           </mesh>
           {/* faixa na base */}
           <mesh position={[0, 0.5, 0]}>
             <cylinderGeometry args={[BODY_R + 0.03, BODY_R + 0.03, 0.14, 48]} />
-            <Mat color={PEACH_DARK} />
+            <Mat color={TRIM} />
           </mesh>
         </group>
         {/* chaminé */}
         <mesh position={[0.45, 3.05, -0.15]} castShadow>
           <cylinderGeometry args={[0.16, 0.19, 0.42, 20]} />
-          <Mat color={PEACH_DARK} />
+          <Mat color={TRIM} />
         </mesh>
 
         <Face y={2.12} z={0.98} blink={eyes} />
@@ -174,7 +204,7 @@ export function Kiln() {
             </mesh>
             <mesh position={[0, 0, 0.04]}>
               <torusGeometry args={[DOOR_RADIUS, 0.08, 12, 48]} />
-              <Mat color={PEACH_DARK} />
+              <Mat color={TRIM} />
             </mesh>
             {/* janelinha */}
             <mesh position={[0, 0, 0.06]}>
@@ -183,7 +213,7 @@ export function Kiln() {
             </mesh>
             <mesh position={[0, 0, 0.07]}>
               <torusGeometry args={[0.34, 0.06, 10, 36]} />
-              <Mat color={PEACH_DARK} />
+              <Mat color={TRIM} />
             </mesh>
             {/* reflexo fofo no vidro */}
             <mesh position={[-0.12, 0.13, 0.075]} rotation={[0, 0, 0.6]} scale={[1, 0.45, 1]}>
@@ -193,14 +223,24 @@ export function Kiln() {
             {/* puxador */}
             <mesh position={[DOOR_RADIUS - 0.16, 0, 0.1]}>
               <sphereGeometry args={[0.07, 12, 10]} />
-              <Mat color={PEACH_DARK} />
+              <Mat color={TRIM} />
             </mesh>
           </group>
         </group>
-        {/* boca escura atrás da porta (aparece quando abre) */}
-        <mesh position={[0, DOOR_CENTER_Y, DOOR_Z - 0.01]}>
-          <circleGeometry args={[DOOR_RADIUS * 0.92, 40]} />
-          <meshStandardMaterial color="#C98B6E" roughness={1} />
+        {/*
+          Boca escura atrás da porta (aparece quando abre). Fica um pouco à frente da parte
+          mais saliente do corpo curvo (z = BODY_R × BODY_DEPTH): se ficasse na mesma
+          profundidade, a superfície do corpo atravessaria o disco e desenharia um risco no meio.
+          Com a porta fechada, o disco fica escondido dentro da espessura da porta.
+        */}
+        <mesh position={[0, DOOR_CENTER_Y, MOUTH_Z]}>
+          <circleGeometry args={[MOUTH_R, 40]} />
+          <meshStandardMaterial color={INSIDE} roughness={1} />
+        </mesh>
+        {/* aro que liga a boca ao corpo: sem fresta quando vista de lado */}
+        <mesh position={[0, DOOR_CENTER_Y, MOUTH_Z - 0.13]} rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[MOUTH_R, MOUTH_R, 0.26, 40, 1, true]} />
+          <meshStandardMaterial color={BODY} roughness={0.8} side={DoubleSide} />
         </mesh>
         {/* luz quente da queima */}
         <pointLight ref={glow} position={[0, DOOR_CENTER_Y, DOOR_Z + 0.6]} color="#FFB060" intensity={0} distance={4} />

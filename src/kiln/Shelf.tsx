@@ -1,4 +1,5 @@
 import { RoundedBox } from '@react-three/drei'
+import { woodGrainTextures } from '../scene/textures'
 import { SHELF_TOP } from './kilnLayout'
 
 const WOOD = '#E8C39A'
@@ -20,12 +21,13 @@ export function Shelf() {
   const height = SHELF_TOP.y
   const legLen = height - TOP_T
   const shelfY = -height * 0.62 // tabuinha de baixo
+  const grain = woodGrainTextures(WOOD)
 
   return (
     <group position={SHELF_TOP}>
       {/* tampo */}
       <RoundedBox args={[TOP_W, TOP_T, TOP_D]} radius={0.06} position={[0, -TOP_T / 2, 0]} castShadow receiveShadow>
-        <meshStandardMaterial color={WOOD} roughness={0.85} />
+        <meshStandardMaterial map={grain.map} bumpMap={grain.bump} bumpScale={0.4} roughness={0.8} />
       </RoundedBox>
 
       {/* pés arredondados, levemente mais finos embaixo */}
@@ -53,7 +55,7 @@ export function Shelf() {
         castShadow
         receiveShadow
       >
-        <meshStandardMaterial color={WOOD} roughness={0.85} />
+        <meshStandardMaterial map={grain.map} bumpMap={grain.bump} bumpScale={0.4} roughness={0.8} />
       </RoundedBox>
 
       {/* faixinha sob o tampo (avental), dá cara de móvel */}
