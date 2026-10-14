@@ -15,15 +15,117 @@
     "home": "Início",
     "undo": "Desfazer"
   },
+  "prep": {
+    "steps": {
+      "cut": "Quantidade",
+      "throw": "Bolhas",
+      "roll": "Rolo"
+    },
+    "stepsLabel": "Etapas do preparo",
+    "refsLabel": "Quantidade de argila",
+    "refs": {
+      "S": "P",
+      "M": "M",
+      "L": "G"
+    },
+    "refNames": {
+      "S": "xícara, potinho",
+      "M": "caneca, tigela",
+      "L": "vaso alto"
+    },
+    "cut": "Cortar",
+    "usePrepared": "Usar argila preparada",
+    "toRoll": "Passar o rolo",
+    "fold": "Dobrar",
+    "toWheel": "Levar ao torno",
+    "hint": {
+      "cutDesktop": "Arraste o fio no bloco para escolher a quantidade",
+      "cutTouch": "Deslize o dedo no bloco para escolher a quantidade",
+      "throwDesktop": "Clique, puxe para cima e solte para arremessar",
+      "throwTouch": "Deslize rápido para baixo para arremessar",
+      "throwDone": "Sem bolhas! Agora é a vez do rolo",
+      "rollDesktop": "Arraste para frente e para trás para passar o rolo",
+      "rollTouch": "Arraste para frente e para trás para passar o rolo",
+      "foldDesktop": "Clique duas vezes para dobrar a massa ao meio",
+      "foldTouch": "Toque duas vezes para dobrar a massa ao meio",
+      "ready": "Uma bola lisinha e brilhante!"
+    }
+  },
   "modeling": {
-    "ready": "Pronto, vamos pintar!",
+    "ready": "Pronto!",
     "hint": {
       "stoppedDesktop": "Segure ESPAÇO para girar o torno",
       "stoppedTouch": "Deslize o pedal para cima para girar o torno",
       "sideDesktop": "Passe o mouse na lateral para afinar · clique e arraste para alargar",
       "sideTouch": "Deslize um dedo na lateral para afinar · dois dedos alargam",
       "topDesktop": "Arraste no topo para esticar ou achatar · clique no topo para abrir a boca",
-      "topTouch": "Arraste no topo para esticar · toque no topo para abrir a boca"
+      "topTouch": "Arraste no topo para esticar · toque no topo para abrir a boca",
+      "spongeDesktop": "Segure o clique sobre a peça para molhar a argila",
+      "spongeTouch": "Segure o dedo sobre a peça para molhar a argila",
+      "spongeEmptyDesktop": "A esponja secou: aperte E ou clique no balde para molhar de novo",
+      "spongeEmptyTouch": "A esponja secou: toque na esponja para molhar de novo",
+      "dryingDesktop": "A argila está ficando opaca: aperte E para pegar a esponja",
+      "dryingTouch": "A argila está ficando opaca: toque na esponja"
+    },
+    "sponge": "Esponja"
+  },
+  "finishing": {
+    "back": "Voltar a modelar",
+    "rib": "Ripador",
+    "handle": "Alça",
+    "handlesLabel": "Formatos de alça",
+    "lockedLabel": "Disponível na lojinha",
+    "handles": {
+      "ring": "Argola",
+      "ear": "Orelha",
+      "double": "Dupla",
+      "tall": "Alta"
+    },
+    "knobs": {
+      "height": "Altura",
+      "opening": "Abertura",
+      "thickness": "Espessura"
+    },
+    "remove": "Remover alça",
+    "skip": "Pular acabamento",
+    "toPainting": "Vamos pintar!",
+    "hint": {
+      "pickDesktop": "Escolha o ripador ou uma alça na barra",
+      "pickTouch": "Escolha o ripador ou uma alça na barra",
+      "ribStoppedDesktop": "Segure ESPAÇO para girar o torno e segure o clique na lateral para ripar",
+      "ribStoppedTouch": "Gire o torno no pedal e segure o dedo na lateral para ripar",
+      "ribDesktop": "Segure o clique na lateral da peça para fazer os sulcos",
+      "ribTouch": "Segure o dedo na lateral da peça para fazer os sulcos",
+      "placeDesktop": "Clique na lateral da peça para colar a alça",
+      "placeTouch": "Toque na lateral da peça para colar a alça",
+      "adjustDesktop": "Arraste os pontinhos para ajustar a alça",
+      "adjustTouch": "Arraste os pontinhos para ajustar a alça",
+      "fluteDesktop": "Clique na lateral para fazer os gomos · clique de novo para tirar",
+      "fluteTouch": "Toque na lateral para fazer os gomos · toque de novo para tirar",
+      "holeDesktop": "Clique na lateral da peça para abrir um furinho",
+      "holeTouch": "Toque na lateral da peça para abrir um furinho"
+    },
+    "toast": {
+      "locked": "Essa alça está na lojinha",
+      "maxHandles": "Esta peça já tem alças demais",
+      "jointCrack": "A peça estava seca: a junção ficou com uma fissurinha",
+      "ribNeedsSpin": "O ripador precisa do torno girando",
+      "maxHoles": "Já tem furinhos bastante nesta peça"
+    },
+    "hole": "Furos",
+    "holesLabel": "Pontas da espátula",
+    "holes": {
+      "round": "Redondo",
+      "star": "Estrela",
+      "heart": "Coração",
+      "drop": "Gota"
+    },
+    "ribsLabel": "Ripadores",
+    "ribs": {
+      "horizontal": "Horizontal",
+      "fine": "Gomos finos",
+      "medium": "Gomos médios",
+      "wide": "Gomos largos"
     }
   },
   "wheel": {
@@ -69,7 +171,17 @@
       "flower": "Flor",
       "drop": "Gota",
       "leaf": "Folha",
-      "dot": "Bolinha"
+      "dot": "Bolinha",
+      "monstera": "Costela-de-adão",
+      "paw": "Pegadinha",
+      "moon": "Lua",
+      "fish": "Peixinho",
+      "cloud": "Nuvem",
+      "mushroom": "Cogumelo",
+      "cactus": "Cacto",
+      "butterfly": "Borboleta",
+      "sun": "Sol",
+      "cherry": "Cereja"
     },
     "colors": {
       "cream": "Branco creme",
@@ -83,7 +195,13 @@
       "lavender": "Azul lavanda",
       "lilac": "Lilás",
       "caramel": "Marrom caramelo",
-      "graphite": "Grafite suave"
+      "graphite": "Grafite suave",
+      "gold": "Dourado",
+      "aqua": "Verde-água",
+      "wine": "Vinho",
+      "navy": "Azul-noite",
+      "mustard": "Mostarda",
+      "blush": "Rosa antigo"
     },
     "glazeHint": "As cores ficam mais vivas depois do forno",
     "glazeHintShort": "As cores ficam vivas no forno",
@@ -132,7 +250,11 @@
     "note": "PNG 1080 × 1350 com moldura suave e logo no canto",
     "saved": "Imagem salva!",
     "shared": "Imagem compartilhada!",
-    "error": "Não deu para salvar a imagem. Tente de novo."
+    "error": "Não deu para salvar a imagem. Tente de novo.",
+    "crackled": "Craquelada",
+    "rare": "Peça rara · kintsugi",
+    "kintsugi": "Restaurar com kintsugi",
+    "kintsugiNote": "Gratuito. Ou deixe craquelada: também é linda."
   },
   "options": {
     "title": "Opções",
@@ -156,6 +278,236 @@
     "langNames": {
       "pt": "Português",
       "en": "English"
+    }
+  },
+  "village": {
+    "knock": "Toc-toc! Tem alguém na porta",
+    "special": "Pedido especial",
+    "accept": "Aceitar",
+    "decline": "Agora não",
+    "close": "Fechar",
+    "orderLabel": "Pedido de {{name}}",
+    "anyPiece": "Qualquer peça vale: {{name}} vai adorar.",
+    "earned": "+{{coins}} moedinhas · você tem {{total}}",
+    "deliver": "Entregar para {{name}}",
+    "animals": {
+      "capi": {
+        "name": "Capi",
+        "orders": {
+          "open1": "Algo para o meu chá da tarde, por favor.",
+          "open2": "Uma peça em tom de terra, bem aconchegante.",
+          "special1": "Uma caneca baixinha, verde-sálvia, com folhinhas."
+        },
+        "goodbye": "Sem pressa nenhuma. Volto outra hora, tá bem?",
+        "react": {
+          "none": "Que peça diferente! Adorei a surpresa, de coração.",
+          "some": "Olha só, ficou linda! Meu chá vai ficar mais gostoso.",
+          "all": "É exatamente o que eu imaginei! Obrigada, meu bem."
+        }
+      },
+      "soneca": {
+        "name": "Soneca",
+        "orders": {
+          "open1": "Um cantinho... para minha plantinha...",
+          "open2": "Algo azulzinho... bem calminho...",
+          "special1": "Um vaso largo... azul lavanda... com estrelinhas..."
+        },
+        "goodbye": "Tudo bem... vou tirar um cochilo e volto...",
+        "react": {
+          "none": "Que peça diferente... adorei a surpresa...",
+          "some": "Olha só... ficou linda...",
+          "all": "É exatamente... o que eu sonhei..."
+        }
+      },
+      "tuco": {
+        "name": "Tuco",
+        "orders": {
+          "open1": "Algo bem colorido para a festa!",
+          "open2": "Uma peça amarelinha, bem alegre!",
+          "special1": "Um vaso alto com faixas: amarelo, coral e grafite!"
+        },
+        "goodbye": "Beleza! Volto depois com mais festa!",
+        "react": {
+          "none": "Uau, que peça diferente! Adorei a surpresa!",
+          "some": "Olha só, ficou LINDA!",
+          "all": "É EXATAMENTE o que eu imaginei! Vai ser o sucesso da festa!"
+        }
+      },
+      "mica": {
+        "name": "Mica",
+        "orders": {
+          "open1": "Algo pequenininho para minha coleção!",
+          "open2": "Alguma coisinha laranja? Bem laranjinha!",
+          "special1": "Um potinho baixo, laranja, com bolinhas!"
+        },
+        "goodbye": "Tá bom! Vou caçar tesouros e já volto!",
+        "react": {
+          "none": "Que peça diferente! Vai ser a mais rara da coleção!",
+          "some": "Olha só, ficou linda! Já sei onde vou guardar!",
+          "all": "É exatamente o que eu imaginei! Peça número um da coleção!"
+        }
+      },
+      "tata": {
+        "name": "Tatá",
+        "orders": {
+          "open1": "Uma coisa redondinha... se não for incômodo...",
+          "open2": "Algo cor de pêssego... só se der, tá?",
+          "special1": "Uma tigela redonda, pêssego... com coraçõezinhos..."
+        },
+        "goodbye": "Ah, tudo bem... desculpa o incômodo... até logo...",
+        "react": {
+          "none": "Que peça diferente... adorei a surpresa, sério...",
+          "some": "Olha só... ficou linda... obrigado...",
+          "all": "É... é exatamente o que eu imaginei! Obrigado mesmo!"
+        }
+      },
+      "rosinha": {
+        "name": "Rosinha",
+        "orders": {
+          "open1": "Algo que lembre o rio...",
+          "open2": "Uma peça cor-de-rosa, como eu!",
+          "special1": "Um vaso alto e fino, azul-céu, com gotinhas de chuva."
+        },
+        "goodbye": "Tudo bem, vou nadar um pouquinho e volto!",
+        "react": {
+          "none": "Que peça diferente! Adorei a surpresa, parece um sonho.",
+          "some": "Olha só, ficou linda! Brilha como o rio.",
+          "all": "É exatamente o que eu imaginei! Que coisa mais linda!"
+        }
+      },
+      "guara": {
+        "name": "Guará",
+        "orders": {
+          "open1": "Algo elegante para minha mesa, por gentileza.",
+          "open2": "Uma peça sóbria, em grafite.",
+          "special1": "Um vaso alto, grafite fosco, sem estampa."
+        },
+        "goodbye": "Sem problemas. Retorno em outro momento.",
+        "react": {
+          "none": "Que peça diferente. Adorei a surpresa, de verdade.",
+          "some": "Olha só, ficou linda. Muito obrigado.",
+          "all": "É exatamente o que eu imaginei. Uma obra de arte."
+        }
+      }
+    },
+    "challenge": "Desafio",
+    "challenges": {
+      "color-gold": "Um potinho dourado para a coleção! Brilhante!",
+      "color-aqua": "Algo verde-água, da cor do rio de manhãzinha.",
+      "color-wine": "Um vaso cor de vinho, para jantares especiais.",
+      "color-navy": "Algo azul-noite... como o céu quando eu durmo...",
+      "color-mustard": "Uma peça mostarda com faixas, para a festa!",
+      "color-blush": "Uma tigelinha rosa antigo... se puder...",
+      "stamp-monstera": "Um vaso com folhas de costela-de-adão... bem verdinho...",
+      "stamp-paw": "Uma tigela com pegadinhas... iguais às minhas...",
+      "stamp-moon": "Uma peça com luas, para as noites tranquilas.",
+      "stamp-fish": "Algo azul com peixinhos, como no meu rio!",
+      "stamp-cloud": "Uma peça com nuvens fofinhas... para sonhar...",
+      "stamp-mushroom": "Uma caneca com cogumelos, bem de floresta.",
+      "stamp-cactus": "Um vaso com cactos. Elegante e resistente.",
+      "stamp-butterfly": "Um potinho com borboletas para a coleção!",
+      "stamp-sun": "Uma peça amarela com sóis! Para o verão inteiro!",
+      "stamp-cherry": "Uma tigela com cerejas, para a sobremesa.",
+      "tool-flute": "Um vaso alto canelado, bem elegante.",
+      "hole-star": "Uma luminária com furinhos de estrela... para dormir olhando o céu...",
+      "hole-heart": "Um potinho com furinhos de coração... para a luz passar...",
+      "hole-drop": "Um coador com furinhos de gota, para o meu chá.",
+      "handle-ear": "Uma caneca grande com alça, para segurar quentinha.",
+      "handle-double": "Uma ânfora para guardar água do rio.",
+      "handle-tall": "Uma jarra listrada com alça alta, para o suco da festa!"
+    }
+  },
+  "shop": {
+    "open": "Lojinha",
+    "title": "Lojinha",
+    "intro": "Troque as moedinhas dos bichinhos por novidades para o ateliê. O rostinho no item mostra quem tem um pedido especial esperando por ele.",
+    "close": "Fechar a lojinha",
+    "coinsLabel": "Você tem {{n}} moedinhas",
+    "owned": "Já é seu",
+    "ownedShort": "Seu",
+    "soon": "Em breve",
+    "buy": "Comprar por {{price}}",
+    "missing": "Faltam {{n}} moedinhas",
+    "bought": "Comprado! Já está liberado.",
+    "boughtChallenge": "Comprado! Alguém vai aparecer com um pedido especial...",
+    "welcome": "Presente de boas-vindas: 40 moedinhas!",
+    "challenge": "Libera um desafio de {{name}}",
+    "challengeDone": "Desafio de {{name}} concluído",
+    "categories": {
+      "colors": "Cores extras",
+      "stamps": "Carimbos",
+      "tools": "Ferramentas de acabamento",
+      "handles": "Alças",
+      "prepared": "Argila preparada",
+      "shapes": "Formas iniciais",
+      "clays": "Argilas",
+      "decor": "Decoração do ateliê",
+      "music": "Músicas",
+      "adornments": "Adornos"
+    },
+    "desc": {
+      "colors": "Uma cor nova na paleta da pintura.",
+      "stamps": "Um carimbo novo para a pintura.",
+      "tools": "Uma ferramenta nova no acabamento.",
+      "handles": "Um formato de alça novo no acabamento.",
+      "prepared": "Libera \"Usar argila preparada\": escolha a quantidade e vá direto para o torno.",
+      "shapes": "Uma base pronta para começar a peça. Chega numa próxima atualização.",
+      "clays": "Um tipo novo de argila. Chega numa próxima atualização.",
+      "decor": "Um enfeite para o ateliê. Chega numa próxima atualização.",
+      "music": "Uma faixa lo-fi nova. Chega numa próxima atualização.",
+      "adornments": "Um detalhe novo para as peças. Chega numa próxima atualização."
+    },
+    "items": {
+      "color-gold": "Dourado",
+      "color-aqua": "Verde-água",
+      "color-wine": "Vinho",
+      "color-navy": "Azul-noite",
+      "color-mustard": "Mostarda",
+      "color-blush": "Rosa antigo",
+      "stamp-monstera": "Costela-de-adão",
+      "stamp-paw": "Pegadinha",
+      "stamp-moon": "Lua",
+      "stamp-fish": "Peixinho",
+      "stamp-cloud": "Nuvem",
+      "stamp-mushroom": "Cogumelo",
+      "stamp-cactus": "Cacto",
+      "stamp-butterfly": "Borboleta",
+      "stamp-sun": "Sol",
+      "stamp-cherry": "Cereja",
+      "tool-flute": "Ripador vertical",
+      "hole-star": "Ponta de estrela",
+      "hole-heart": "Ponta de coração",
+      "hole-drop": "Ponta de gota",
+      "handle-ear": "Alça orelha",
+      "handle-double": "Alça dupla",
+      "handle-tall": "Alça alta",
+      "prepared-clay": "Argila preparada",
+      "shape-teapot": "Bule",
+      "shape-pitcher": "Jarra",
+      "shape-deep-plate": "Prato fundo",
+      "shape-goblet": "Cálice",
+      "clay-terracotta": "Terracota",
+      "clay-porcelain": "Porcelana",
+      "clay-black": "Argila preta",
+      "decor-lamp": "Luminária",
+      "decor-rug": "Tapete",
+      "decor-hammock": "Rede",
+      "decor-curtain": "Cortina",
+      "decor-painting": "Quadro",
+      "decor-bookcase": "Estante",
+      "decor-pouf": "Pufe",
+      "decor-clock": "Relógio",
+      "decor-bunting": "Bandeirinhas",
+      "decor-tea-table": "Mesinha de chá",
+      "decor-cushions": "Almofadas",
+      "decor-fern": "Samambaia",
+      "music-rain": "Chuva na janela",
+      "music-sunday": "Tarde de domingo",
+      "music-breakfast": "Café da manhã",
+      "adorn-wavy-rim": "Borda ondulada",
+      "adorn-feet": "Pezinhos",
+      "adorn-lid": "Tampa com pegador",
+      "adorn-spout": "Bico de jarra"
     }
   }
 }

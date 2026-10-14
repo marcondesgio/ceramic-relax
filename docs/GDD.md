@@ -31,13 +31,15 @@ Ceramic Relax é um jogo web 3D e relaxante onde o jogador modela um vaso no tor
 
 ## Fluxo do jogo
 
-O jogo tem quatro fases em sequência dentro de uma única cena 3D; a câmera se move suavemente entre elas, sem telas de carregamento.
+O jogo tem seis etapas em sequência dentro de uma única cena 3D; a câmera se move suavemente entre elas, sem telas de carregamento.
 
-1. **Tela inicial:** o ateliê ao fundo com o torno vazio, logo "Ceramic Relax", botão "Começar", seletor PT/EN e controle de som.
-2. **Modelagem:** uma bola de argila cai no torno com um "ploft" fofo. O jogador gira e molda. Botão "Pronto, vamos pintar!".
-3. **Pintura:** a argila fica com cor de biscoito (cerâmica crua) e aparece a barra de ferramentas. Botão "Levar ao forno".
-4. **Forno:** o jogador escolhe brilhante ou fosco, a peça entra no forno e há uma animação de 6 a 8 segundos.
-5. **Resultado:** a peça sai brilhando sobre uma prateleira, girando devagar. Botões "Salvar imagem" e "Fazer outra peça".
+1. **Tela inicial:** o ateliê ao fundo com o torno vazio, logo, botão "Começar", seletor PT/EN e controle de som.
+2. **Preparo da argila:** o jogador escolhe a quantidade, arremessa a argila na bancada, passa o rolo e faz dobras. Quem comprou a argila preparada pode pular.
+3. **Modelagem:** a bola de argila vai ao torno com um "ploft" fofo. O jogador gira, molda e hidrata com a esponja. Botão "Pronto!".
+4. **Acabamento (opcional):** ripado, furos e alças na bancada. Botão "Vamos pintar!" ou "Pular acabamento".
+5. **Pintura:** a argila fica com cor de biscoito e aparece a barra de ferramentas. Botão "Levar ao forno".
+6. **Forno:** o jogador escolhe brilhante ou fosco, a peça entra no forno e há uma animação de 6 a 8 segundos.
+7. **Resultado:** a peça sai sobre uma prateleira, girando devagar. Se estiver craquelada, aparece a opção de kintsugi. Botões "Salvar imagem", "Entregar" (se houver pedido) e "Fazer outra peça".
 
 **Regras de navegação**
 
@@ -45,6 +47,39 @@ O jogo tem quatro fases em sequência dentro de uma única cena 3D; a câmera se
 - Desfazer (até 20 passos) existe na modelagem e na pintura.
 - "Fazer outra peça" volta para o passo 2, sem passar pela tela inicial.
 - Nada é salvo no servidor; a peça vive só na sessão até o jogador baixar a imagem.
+
+## Fase 0 — Preparo da argila
+
+Antes do torno, o jogador prepara a argila na bancada: escolhe a quantidade, arremessa para tirar as bolhas, passa o rolo e faz dobras até a massa ficar lisa. É uma etapa curta, de 15 a 25 segundos, pensada para ser muito satisfatória de som e toque.
+
+**1. Escolher a quantidade**
+
+- Um bloco de argila aparece na bancada e o jogador corta a porção com um fio, deslizando para escolher o tamanho.
+- Três referências visuais ajudam: P (xícara, potinho), M (caneca, tigela) e G (vaso alto).
+- Existe um mínimo, para a peça ter parede suficiente, e um máximo, para caber no torno e manter o desempenho.
+- A quantidade escolhida define o volume total da peça no torno; não dá para adicionar argila depois.
+
+**2. Arremessar na bancada (tirar as bolhas)**
+
+- O jogador "joga" a argila contra a bancada várias vezes; cada arremesso faz um "ploft" e libera bolhinhas que estouram na superfície.
+- Um sinal visual mostra o progresso: as bolhinhas vão diminuindo até sumir.
+- Cerca de 5 a 8 arremessos bastam.
+
+**3. Rolo e dobras (alisar)**
+
+- O jogador passa o rolo para frente e para trás, achatando a massa.
+- Depois dobra a massa ao meio e repete, de 2 a 3 vezes, até a argila ficar lisa e uniforme.
+- Ao terminar, a massa vira uma bola lisinha e brilhante, que o jogador leva ao torno.
+
+**Consequências suaves**
+
+- Bolhas que restarem viram pequenas marquinhas na superfície da peça, um detalhe artesanal, nunca uma explosão no forno.
+- Não existe forma errada de preparar: a etapa só termina mais rápido ou mais devagar.
+
+**Argila preparada (lojinha)**
+
+- Item permanente da lojinha que libera o botão "Usar argila preparada": o jogador escolhe a quantidade e pula direto para o torno.
+- O preparo manual continua disponível para quem gosta da etapa.
 
 ## Fase 1 — Modelagem
 
@@ -69,12 +104,53 @@ A argila só se deforma enquanto o torno gira, como na vida real: parado, o curs
 
 - Raio mínimo de parede para a peça não "quebrar"; ao chegar perto, a argila vibra levemente e para de afinar.
 - O volume total de argila é aproximadamente conservado: afinar embaixo faz crescer em altura.
-- Botão "Mais argila" adiciona volume (máximo de 3 vezes), para quem quiser peças maiores.
-- Gotas de água: um botão de esponja deixa a argila brilhante e úmida por alguns segundos; é só visual e sonoro, puro conforto.
+- A quantidade de argila é definida na fase de preparo; no torno não é possível adicionar mais.
+
+**Hidratação da argila**
+
+A argila vai secando enquanto o jogador modela, e precisa ser hidratada com uma esponja. A umidade nunca aparece como número ou barra: o jogador lê o estado da argila pela aparência dela.
+
+- **Esponja:** o jogador pega a esponja, mergulha no balde de água ao lado do torno e aperta sobre a peça; as gotas escorrem e a argila volta a brilhar.
+- **Argila úmida:** cor escura, brilho suave, modela com facilidade.
+- **Argila secando:** fica mais clara e opaca, e a modelagem fica um pouco mais "dura".
+- **Argila seca:** surgem fissuras finas na superfície, que somem se o jogador hidratar a tempo.
+- **Água demais:** a argila fica mole e a parede cede levemente, então o jogador aprende a dosar. Nada desaba por completo.
+- A argila seca mais rápido com o torno girando em alta velocidade e em peças com parede fina.
+- Se a peça for para o acabamento com fissuras, elas ficam registradas e aparecem como craquelado depois do forno.
 
 **Formas iniciais (opcional)**
 
 - Além da bola livre, o jogador pode começar de uma base pronta: tigela, caneca, vaso alto ou prato. Ajuda quem quer resultado rápido.
+
+## Fase 1.5 — Acabamento
+
+Depois do torno, a peça vai para a bancada e o jogador pode personalizá-la com ferramentas de acabamento antes da pintura. A etapa é opcional: o botão "Pular acabamento" leva direto à pintura.
+
+| Ferramenta | O que faz | Como usar |
+| --- | --- | --- |
+| Ripador horizontal | Cria sulcos em anéis ao redor da peça | Com o torno girando, encostar a ferramenta na altura desejada |
+| Ripador vertical | Cria canelado de cima a baixo, como gomos | Escolher o espaçamento e passar a ferramenta na lateral |
+| Espátula de furos | Abre furos (redondo, estrela, coração, gota) | Tocar onde quer o furo; o formato vem da ponta escolhida |
+| Alças | Adiciona alças para criar xícara, caneca, ânfora ou jarra | Escolher o formato, arrastar até a peça e ajustar curvatura e espessura |
+
+**Alças**
+
+- Formatos pré-moldados no lançamento: argola (xícara), orelha (caneca), dupla (ânfora) e alça alta (jarra).
+- O jogador posiciona a alça na lateral da peça e ajusta por 3 pontos de controle: altura, abertura e espessura.
+- A alça também precisa de hidratação: se a peça estiver seca demais na hora de colar, a junção aparece com uma fissura que vira craquelado.
+- A alça é pintada junto com a peça na fase de pintura.
+
+**Notas técnicas**
+
+- O ripado horizontal é feito ondulando o próprio perfil da peça, sem custo extra.
+- O ripado vertical e os furos quebram a simetria do torno: são feitos com mapas de relevo e recortes na textura, com cuidado com o desempenho no celular.
+- As alças são malhas separadas, presas à superfície no ponto escolhido.
+- Para salvar a peça, guarda-se só a receita: tipo e posição de cada furo, espaçamento do ripado e parâmetros de cada alça.
+
+**Lançamento em partes**
+
+1. Ripador horizontal e alças pré-moldadas.
+2. Ripador vertical e espátula de furos.
 
 ## Fase 2 — Pintura
 
@@ -116,12 +192,161 @@ O jogador escolhe brilhante ou fosco, assiste a uma animação curta e recebe a 
 
 O jogador pode tocar na tela para pular a animação.
 
+**Peças craqueladas e kintsugi**
+
+Uma peça que passou da fase de modelagem ou acabamento com fissuras nunca quebra: ela sai do forno craquelada, com linhas finas e irregulares nos pontos que secaram. O efeito é bonito por si só, não um erro.
+
+- Na tela de resultado, aparece a opção "Restaurar com kintsugi": a técnica japonesa de consertar cerâmica com ouro.
+- Uma animação curta preenche as linhas do craquelado com ouro brilhante, e a peça ganha o selo de peça rara na prateleira.
+- O jogador escolhe: manter craquelada, restaurar com kintsugi ou deixar como está e decidir depois na prateleira.
+- O kintsugi é gratuito e sempre disponível, para que a peça "com defeito" vire uma conquista, não uma frustração.
+- Os bichinhos reagem com encanto a peças com kintsugi, como qualquer outra peça.
+
 **Tela de resultado e salvar imagem**
 
 - A peça fica em uma prateleira, girando devagar, com fundo do ateliê desfocado.
 - O jogador pode girar a peça com o mouse ou dedo para escolher o melhor ângulo.
 - "Salvar imagem" gera um PNG 1080 x 1350 (formato bom para redes sociais) com moldura suave e o logo "Ceramic Relax" pequeno no canto.
 - No celular, usa o compartilhamento nativo (Web Share API) quando disponível; senão, baixa o arquivo.
+
+## Vila dos bichinhos
+
+O jogador é a ceramista de uma vilinha de animais brasileiros, que batem à porta do ateliê com pedidos de peças. Toda a ação continua dentro do ateliê; a vila existe pelos personagens, não por um mapa.
+
+**Decisões fechadas**
+
+| Tema | Decisão |
+| --- | --- |
+| Onde a vila aparece | Só no ateliê; os bichinhos visitam a porta |
+| Elenco no lançamento | 7 bichinhos |
+| Tipos de pedido | Mistura de pedidos abertos e especiais detalhados |
+| Peça fora do pedido | Sempre aceita; só a reação muda |
+| Ritmo | Fila livre: termina um pedido, chega o próximo |
+| Recompensa | Moedinhas para a lojinha |
+
+**Como é uma visita**
+
+1. Ouve-se um toc-toc e a porta do ateliê se abre: o bichinho entra e para ao lado do torno.
+2. Um balão de fala mostra o pedido com texto curto e um desenho simples (ex.: uma caneca azul).
+3. O jogador aceita e faz a peça normalmente: modelagem, pintura e forno.
+4. Na tela de resultado, aparece o botão "Entregar para \[nome\]". O bichinho reage à peça, agradece e entrega as moedinhas.
+5. Depois de alguns segundos, o próximo bichinho bate à porta.
+
+**Regras de convivência com o modo livre**
+
+- O jogador pode recusar com "Agora não": o bichinho se despede com carinho e outro chega mais tarde, sem penalidade.
+- O modo livre continua disponível a qualquer momento; peças livres vão para a prateleira e não dão moedinhas.
+- Toda peça entregue também fica registrada na prateleira, com o nome de quem recebeu.
+
+### Elenco de lançamento
+
+Sete bichinhos da fauna brasileira, cada um com personalidade e gostos próprios, para que os pedidos tenham variedade e os jogadores tenham favoritos. Os nomes são curtos e iguais em português e inglês.
+
+| Bichinho | Personalidade | Gosta de | Pedido aberto (exemplo) | Pedido especial (exemplo) |
+| --- | --- | --- | --- | --- |
+| **Capi** (capivara) | Calma, acolhedora, a "avó" da vila | Canecas, chá, tons terrosos | "Algo para o meu chá da tarde" | Caneca baixa, verde sálvia, com folhinhas |
+| **Soneca** (preguiça) | Sonolenta, fala devagar, muito doce | Vasos para plantas, tons suaves | "Um cantinho para minha plantinha" | Vaso largo, azul lavanda, com estrelas |
+| **Tuco** (tucano) | Festeiro, falante, exagerado | Cores fortes, listras | "Algo bem colorido para a festa!" | Vaso alto com 3 faixas: amarelo, coral e preto |
+| **Mica** (mico-leão-dourado) | Curiosa, agitada, colecionadora | Peças pequenas, dourado e laranja | "Algo pequenininho para minha coleção" | Potinho baixo, laranja, com bolinhas |
+| **Tatá** (tatu-bola) | Tímido, fala baixinho, fofo | Tigelas e formas redondas | "Uma coisa redondinha, se não for incômodo..." | Tigela redonda, pêssego, com corações por dentro |
+| **Rosinha** (boto-cor-de-rosa) | Sonhadora, romântica | Rosa, azul céu, formas fluidas | "Algo que lembre o rio" | Vaso alto e fino, azul céu, com gotas |
+| **Guará** (lobo-guará) | Elegante, reservado, gentil | Peças altas e finas, tons sóbrios | "Algo elegante para minha mesa" | Vaso alto, grafite fosco, sem estampa |
+
+**Diretrizes de personagem**
+
+- Todos têm corpo arredondado, olhos grandes e expressões simples, no mesmo estilo pastel do ateliê.
+- Cada um tem 4 animações: chegar, esperar (com um tique próprio, como Soneca bocejando), reagir e ir embora.
+- Falas curtas, de até 2 linhas, sempre gentis; cada bichinho tem um jeito de falar reconhecível.
+- Novos bichinhos podem entrar depois em atualizações (ex.: arara, onça-pintada, tamanduá).
+
+### Pedidos e reações
+
+A peça entregue é sempre aceita: o jogo lê alguns traços da peça e escolhe uma reação mais ou menos empolgada, mas a recompensa não muda por "acertar".
+
+**Tipos de pedido**
+
+- **Aberto** (cerca de 3 em cada 4): pede no máximo 1 traço, como cor ou tipo de peça. Recompensa: 10 moedinhas.
+- **Especial** (cerca de 1 em cada 4): pede de 2 a 3 traços (forma, cor e estampa), com um ícone de estrelinha no balão. Recompensa: 25 moedinhas, porque dá mais trabalho, não porque precisa ser exato.
+
+**Como o jogo lê a peça**
+
+O jogo calcula automaticamente quatro traços da peça finalizada, sem o jogador ver números:
+
+| Traço | Como é calculado |
+| --- | --- |
+| Tipo de peça | Proporção entre altura e largura + abertura da boca → prato, tigela, caneca, potinho, vaso, vaso alto |
+| Cor principal | A cor que cobre mais área da pintura |
+| Estampa | Se há carimbos (e de qual tipo) ou faixas |
+| Acabamento | Brilhante ou fosco |
+
+**Níveis de reação**
+
+| Traços que batem | Reação |
+| --- | --- |
+| Nenhum | "Que peça diferente! Adorei a surpresa." Sorriso e agradecimento |
+| Alguns | "Olha só, ficou linda!" Pulinho de alegria |
+| Todos | "É exatamente o que eu imaginei!" Corações e uma animação especial do personagem |
+
+Nunca existe reação negativa, decepção ou pedido para refazer.
+
+**Regras da fila**
+
+- Só um bichinho por vez na porta.
+- O próximo chega de 5 a 10 segundos depois da entrega, ou quando o jogador volta para a modelagem.
+- O mesmo bichinho não aparece duas vezes seguidas.
+- Na primeira sessão, os pedidos vêm em ordem fixa para apresentar os personagens: Capi, Tatá e Tuco.
+
+### Moedinhas e lojinha
+
+As moedinhas só servem para a lojinha do ateliê, que libera itens novos. A meta de ritmo é o jogador conseguir comprar um item novo a cada sessão de 10 a 15 minutos no começo, e um a cada duas ou três sessões depois.
+
+**Catálogo inicial (cerca de 40 itens)**
+
+| Categoria | Itens | Preço (moedinhas) |
+| --- | --- | --- |
+| Cores extras | 6 cores, ex.: dourado, verde-água, vinho | 30 a 60 |
+| Carimbos | 10 carimbos, ex.: folha de costela-de-adão, pegadinha, lua, peixinho | 40 a 80 |
+| Formas iniciais | 4 bases prontas, ex.: bule, jarra, prato fundo | 60 a 100 |
+| Argilas | Terracota, porcelana, argila preta | 120 a 150 |
+| Decoração do ateliê | 12 itens, ex.: luminária, tapete, rede, cortina, quadro | 50 a 150 |
+| Músicas | 3 faixas lo-fi extras | 80 |
+| Ferramentas de acabamento | Ripador vertical e espátula de furos com pontas de estrela, coração e gota (o ripador horizontal e o furo redondo são gratuitos) | 80 a 150 |
+| Alças | Orelha, dupla e alça alta (a argola é gratuita) | 60 a 120 |
+| Adornos | Borda ondulada, pezinhos, tampa com pegador, bico de jarra | 80 a 150 |
+| Argila preparada | Item permanente que permite pular a fase de preparo | 200 |
+
+**Regras**
+
+- A lojinha mostra todos os itens desde o início, com os bloqueados em silhueta, para dar vontade de conquistar.
+- Sem moeda paga e sem compra de moedinhas com dinheiro real.
+- Na primeira sessão, o jogador recebe moedinhas suficientes para comprar 1 item, para conhecer a lojinha logo.
+
+**Desafios desbloqueados pela lojinha**
+
+Cada item comprado abre novos pedidos especiais dos bichinhos que só podem ser feitos com ele. Assim, toda compra traz uma história nova, não só uma ferramenta.
+
+| Item comprado | Desafio que aparece (exemplo) |
+| --- | --- |
+| Alça orelha | Capi pede "uma caneca grande com alça, para segurar quentinha" |
+| Ripador vertical | Guará pede "um vaso alto canelado, bem elegante" |
+| Espátula de estrela | Soneca pede "uma luminária com furinhos de estrela, para dormir olhando o céu" |
+| Cor dourada | Mica pede "um potinho dourado para a coleção" |
+| Alça dupla | Rosinha pede "uma ânfora para guardar água do rio" |
+| Bico de jarra | Tuco pede "uma jarra listrada para o suco da festa" |
+
+- Os desafios entram na fila como pedidos especiais (25 moedinhas) e seguem a mesma regra: qualquer peça é aceita, só a reação muda.
+- A lojinha mostra, em cada item, um ícone do bichinho cujo desafio ele libera, para despertar curiosidade.
+- Os desafios concluídos ficam marcados no álbum do bichinho.
+
+**Ponto em aberto: motivo para voltar no dia seguinte**
+
+A fila livre é ótima para sessões longas, mas sozinha não dá motivo para voltar amanhã. Sugestões para decidir:
+
+- **Visita especial do dia:** um pedido especial diferente por dia, com recompensa maior.
+- **Plantinha que cresce em tempo real** dentro de um vaso do jogador.
+- **Item da semana na lojinha**, que muda toda segunda-feira.
+
+Nenhuma delas pune quem falta: são só convites para voltar.
 
 ## Controles
 
@@ -139,6 +364,12 @@ Toda ação tem equivalente no desktop e no celular; no celular, a tela fica em 
 | Zoom | Roda do mouse | Pinça com dois dedos (fora da peça) |
 | Desfazer | Ctrl + Z | Botão de desfazer |
 | Trocar ferramenta | Teclas 1 a 5 | Barra inferior de ícones |
+| Escolher a quantidade de argila | Arrastar o fio de corte no bloco | Deslizar o dedo no bloco |
+| Arremessar na bancada | Clicar, puxar para cima e soltar | Deslizar rápido para baixo |
+| Passar o rolo / dobrar | Arrastar para frente e para trás / clique duplo | Arrastar para frente e para trás / toque duplo |
+| Hidratar com a esponja | Tecla E ou clique no balde, depois segurar sobre a peça | Botão da esponja, depois segurar o dedo sobre a peça |
+| Usar ferramenta de acabamento | Escolher na barra e clicar ou arrastar na peça | Escolher na barra e tocar ou arrastar na peça |
+| Ajustar alça | Arrastar os 3 pontos de controle | Arrastar os 3 pontos de controle |
 
 **Acessibilidade**
 

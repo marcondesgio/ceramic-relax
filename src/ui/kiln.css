@@ -299,3 +299,34 @@
   position: absolute;
   z-index: 1;
 }
+
+/* ---------- craquelado e kintsugi ---------- */
+.badge--crackle {
+  background: var(--bisque);
+}
+/* selo de peça rara: dourado */
+.badge--rare {
+  background: linear-gradient(135deg, #f6dc8e, #e6b453);
+  color: #5a3d12;
+  box-shadow: 0 3px 0 #c9953b;
+}
+.result-hud__kintsugi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+}
+.btn--gold {
+  --base: #c9953b;
+  background: linear-gradient(135deg, #fbe8b0, #f0c868);
+  color: #5a3d12;
+}
+.hud--touch .result-hud__kintsugi {
+  width: 100%;
+}
+.hud--touch .result-hud__kintsugi .btn {
+  width: 100%;
+  min-height: 56px;
+  font-size: 18px;
+}

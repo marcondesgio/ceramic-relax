@@ -1,0 +1,130 @@
+/* ---------- acabamento ---------- */
+
+/* seletor de formatos de alça, ao lado da barra de ferramentas */
+.finish-picker {
+  position: absolute;
+  left: calc(var(--gap) + 118px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.finish-picker .tool {
+  position: relative;
+  width: 84px;
+  min-height: 64px;
+}
+/* formato da lojinha: em "silhueta", com cadeado */
+.tool.is-locked {
+  opacity: 0.5;
+}
+.tool.is-locked svg:first-child {
+  filter: grayscale(1);
+}
+.tool__lock {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bisque);
+  color: var(--text-strong);
+}
+
+/* alça selecionada: legenda dos pontos de controle + remover (embaixo, longe da peça) */
+.handle-adjust {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--gap) + var(--safe-bottom) + 96px);
+  transform: translateX(-50%);
+  flex-wrap: wrap;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  max-width: calc(100% - 2 * var(--gap));
+}
+.handle-legend {
+  gap: 14px;
+  animation: none;
+}
+.handle-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+}
+.handle-legend i {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- celular ---------- */
+.hud--touch .finish-picker {
+  top: auto;
+  transform: none;
+  left: var(--gap);
+  right: calc(var(--gap) + 128px);
+  bottom: calc(var(--gap) + var(--safe-bottom) + 176px);
+  flex-direction: row;
+}
+.hud--touch .finish-picker .tool {
+  width: auto;
+  flex: 1;
+  min-height: 60px;
+}
+.hud--touch .handle-adjust {
+  bottom: calc(var(--gap) + var(--safe-bottom) + 176px);
+  /* à esquerda do pedal, como a barra de ferramentas */
+  left: var(--gap);
+  right: calc(var(--gap) + 128px);
+  transform: none;
+  width: auto;
+  max-width: none;
+  justify-content: flex-start;
+}
+.hud--touch .handle-legend {
+  gap: 10px;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+@media (min-width: 900px) {
+  .hud--touch .finish-picker {
+    top: 50%;
+    bottom: auto;
+    right: auto;
+    left: calc(var(--gap) + 118px);
+    transform: translateY(-50%);
+    flex-direction: column;
+  }
+  .hud--touch .finish-picker .tool {
+    width: 84px;
+  }
+}
+
+/* o "Voltar a modelar" com texto ocupa o topo: dica e ajuste da alça descem um pouco */
+.finish-hud.hud--desktop .hud__hint {
+  top: calc(var(--gap) + var(--safe-top) + 76px);
+  max-width: calc(100% - 2 * var(--gap) - 240px);
+}
+
+/* celular estreito: barra e seletor só com ícones (os nomes ficam no aria-label e na dica) */
+@media (max-width: 899px) {
+  .finish-hud.hud--touch .hud__tools .tool span,
+  .finish-hud.hud--touch .finish-picker .tool > span:not(.tool__lock) {
+    display: none;
+  }
+  .finish-hud.hud--touch .hud__tools .tool,
+  .finish-hud.hud--touch .finish-picker .tool {
+    min-height: 56px;
+  }
+}

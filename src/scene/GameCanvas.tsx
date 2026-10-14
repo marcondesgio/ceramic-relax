@@ -7,7 +7,14 @@ import { PotteryCursor } from '../pottery/PotteryCursor'
 import { PotteryMesh } from '../pottery/PotteryMesh'
 import { potteryRuntime } from '../pottery/potteryRuntime'
 import { SculptController } from '../pottery/SculptController'
+import { HydrationController } from '../pottery/HydrationController'
+import { FinishingController } from '../finishing/FinishingController'
+import { SpongeStation } from '../pottery/SpongeStation'
 import { PaintController } from '../paint/PaintController'
+import { PrepBench } from '../prep/PrepBench'
+import { VillageScene } from '../village/VillageScene'
+import { VillageController } from '../village/VillageController'
+import { PrepController } from '../prep/PrepController'
 import { Wheel } from '../wheel/Wheel'
 import { WheelController } from '../wheel/WheelController'
 import { AudioDriver } from '../audio/AudioDriver'
@@ -15,6 +22,7 @@ import { Kiln } from '../kiln/Kiln'
 import { kilnRuntime } from '../kiln/kilnRuntime'
 import { Shelf } from '../kiln/Shelf'
 import { FiringController } from '../kiln/FiringController'
+import { KintsugiController } from '../kiln/KintsugiController'
 import { FiringEffects } from '../kiln/FiringEffects'
 import { PreviewRenderer } from '../kiln/PreviewRenderer'
 import { ResultController } from '../kiln/ResultController'
@@ -79,15 +87,24 @@ export function GameCanvas() {
       <Wheel />
       <PotteryMesh />
       <PotteryCursor />
+      <SpongeStation />
       <Kiln />
       <Shelf />
+      <PrepBench />
+      <VillageScene />
       <FiringEffects />
       <StudioEnv />
 
       <WheelController />
+      <PrepController />
       <SculptController />
+      <HydrationController />
       <PaintController />
+      {/* depois da modelagem e da pintura: o cursor do acabamento vale por último */}
+      <FinishingController />
       <FiringController />
+      <KintsugiController />
+      <VillageController />
       <ResultController />
       <PreviewRenderer />
       <AudioDriver />

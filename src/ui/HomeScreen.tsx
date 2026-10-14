@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useGameStore } from '../store/useGameStore'
 import { Button } from './Button'
-import { SparkleIcon } from './Icons'
+import { CoinIcon, ShopIcon, SparkleIcon } from './Icons'
 import { LangToggle } from './LangToggle'
 import { TopControls } from './TopControls'
 
@@ -25,7 +25,10 @@ function LogoVase() {
 /** Tela inicial: logo, Começar e seletor de idioma, com o ateliê ao fundo */
 export function HomeScreen() {
   const { t } = useTranslation()
-  const setPhase = useGameStore((s) => s.setPhase)
+  // continua a peça salva, se houver; senão, preparo da argila
+  const start = useGameStore((s) => s.start)
+  const coins = useGameStore((s) => s.coins)
+  const setShopOpen = useGameStore((s) => s.setShopOpen)
 
   return (
     <div className="ui-layer home">
@@ -41,8 +44,15 @@ export function HomeScreen() {
           </h1>
           <p className="home__tagline">{t('home.tagline')}</p>
         </div>
-        <Button variant="primary" className="home__start" icon={<SparkleIcon />} onClick={() => setPhase('modeling')}>
+        <Button variant="primary" className="home__start" icon={<SparkleIcon />} onClick={start}>
           {t('home.start')}
+        </Button>
+        <Button className="home__shop" icon={<ShopIcon />} onClick={() => setShopOpen(true)}>
+          {t('shop.open')}
+          <span className="shop-price">
+            <CoinIcon size={18} />
+            {coins}
+          </span>
         </Button>
         <p className="home__note">{t('home.note')}</p>
       </div>

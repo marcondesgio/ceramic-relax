@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGameStore } from '../store/useGameStore'
 import { captureResultImage, shareOrDownload } from '../kiln/saveImage'
+import { deliverOrder } from '../village/village'
 import { Button } from './Button'
-import { AgainIcon, DownloadIcon, HomeIcon, RotateIcon, SparkleIcon } from './Icons'
+import { AgainIcon, DownloadIcon, GiftIcon, HomeIcon, RotateIcon, ShopIcon, SparkleIcon } from './Icons'
 import { TopControls } from './TopControls'
 import { useIsTouch } from './useIsTouch'
 
@@ -15,6 +16,12 @@ export function ResultHUD() {
   const newPiece = useGameStore((s) => s.newPiece)
   const setPhase = useGameStore((s) => s.setPhase)
   const showToast = useGameStore((s) => s.showToast)
+  const crackle = useGameStore((s) => s.crackle)
+  const restoreKintsugi = useGameStore((s) => s.restoreKintsugi)
+  // pedido de um bichinho: qualquer peça pode ser entregue (só a reação muda)
+  const order = useGameStore((s) => s.village.order)
+  const delivered = useGameStore((s) => s.deliveredTo !== null)
+  const setShopOpen = useGameStore((s) => s.setShopOpen)
   const [saving, setSaving] = useState(false)
 
   const save = async () => {
@@ -41,6 +48,8 @@ export function ResultHUD() {
     <div className={`ui-layer result-hud ${touch ? 'hud--touch' : 'hud--desktop'}`}>
       <div className="hud__top">
         <Button variant="icon" aria-label={t('common.home')} icon={<HomeIcon />} onClick={goHome} />
+        {/* lojinha: gastar as moedinhas que os bichinhos deram */}
+        <Button variant="icon" aria-label={t('shop.open')} icon={<ShopIcon />} onClick={() => setShopOpen(true)} />
         <span className="hud__spacer" />
         <TopControls />
       </div>
@@ -50,12 +59,36 @@ export function ResultHUD() {
           {t('result.badge', { finish: t(`kiln.${finish}`) })}
         </span>
         <h1 className="screen-title">{t('result.title')}</h1>
+        {crackle && !crackle.kintsugi && <span className="badge badge--crackle">{t('result.crackled')}</span>}
+        {/* selo de peça rara (também fica na receita da prateleira) */}
+        {crackle?.kintsugi && (
+          <span className="badge badge--rare">
+            <SparkleIcon size={18} />
+            {t('result.rare')}
+          </span>
+        )}
       </div>
       <div className="result-hud__bottom">
         <div className="hint">
           <RotateIcon size={18} />
           {touch ? t('result.dragShort') : t('result.drag')}
         </div>
+        {order && !delivered && (
+          <div className="result-hud__deliver">
+            <Button variant="primary" icon={<GiftIcon />} onClick={deliverOrder}>
+              {t('village.deliver', { name: t(`village.animals.${order.animal}.name`) })}
+            </Button>
+          </div>
+        )}
+        {/* gratuito e sempre disponível: a peça "com defeito" vira conquista. Pode ficar para depois. */}
+        {crackle && !crackle.kintsugi && (
+          <div className="result-hud__kintsugi">
+            <Button className="btn--gold" icon={<SparkleIcon />} onClick={restoreKintsugi}>
+              {t('result.kintsugi')}
+            </Button>
+            <p className="kiln-screen__note">{t('result.kintsugiNote')}</p>
+          </div>
+        )}
         <div className="result-hud__actions">
           <Button variant="primary" icon={<DownloadIcon />} onClick={save} disabled={saving}>
             {saving ? t('result.saving') : t('result.save')}

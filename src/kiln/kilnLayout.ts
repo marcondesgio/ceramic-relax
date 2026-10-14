@@ -1,5 +1,6 @@
 import { Euler, Vector3 } from 'three'
 import { PROFILE_SAMPLES, type Profile } from '../pottery/profile'
+import { handlesRuntime } from '../finishing/handles'
 
 // Onde ficam o forno e a prateleira no ateliê (o torno está na origem).
 
@@ -20,11 +21,11 @@ export function kilnToWorld(x: number, y: number, z: number, out = new Vector3()
   return out.set(x, y, z).applyEuler(kilnEuler).add(KILN_POS)
 }
 
-/** Maior medida da peça (altura ou diâmetro), para caber na porta e na prateleira */
+/** Maior medida da peça (altura ou diâmetro, contando as alças), para caber na porta e na prateleira */
 export function pieceSize(p: Profile) {
   let r = 0
   for (let i = 0; i < PROFILE_SAMPLES; i++) r = Math.max(r, p.radii[i])
-  return Math.max(p.height, r * 2)
+  return Math.max(p.height, (r + handlesRuntime.reach) * 2)
 }
 
 /** Escala da peça viajando pelo forno (cabe na porta redonda) */

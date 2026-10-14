@@ -367,3 +367,10 @@
     width: auto;
   }
 }
+
+/* ferramenta na mão (esponja) */
+.tool.is-active,
+.tool.is-active:hover {
+  background: var(--peach);
+  color: var(--text-strong);
+}

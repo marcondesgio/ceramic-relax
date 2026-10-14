@@ -28,15 +28,20 @@ export interface ProfileSnapshot {
   mouthDepth: number
 }
 
-/** Bola de argila inicial: um montinho arredondado, mais largo no meio */
-export function createBallProfile(): Profile {
+/**
+ * Bola de argila inicial: um montinho arredondado, mais largo no meio.
+ * `amount` é a quantidade escolhida no preparo (1 = bola padrão); o volume cresce
+ * na mesma proporção, então raio e altura crescem pela raiz cúbica.
+ */
+export function createBallProfile(amount = 1): Profile {
+  const k = Math.cbrt(amount)
   const radii = new Float32Array(PROFILE_SAMPLES)
-  const R = 0.85
+  const R = 0.85 * k
   for (let i = 0; i < PROFILE_SAMPLES; i++) {
     const t = i / (PROFILE_SAMPLES - 1)
     radii[i] = R * (0.9 + 0.2 * Math.sin(Math.PI * t)) * Math.sqrt(1 - 0.78 * t ** 3)
   }
-  const profile: Profile = { radii, height: 1.25, mouthDepth: 0, clayVolume: 0, version: 0 }
+  const profile: Profile = { radii, height: 1.25 * k, mouthDepth: 0, clayVolume: 0, version: 0 }
   profile.clayVolume = computeClayVolume(profile)
   return profile
 }

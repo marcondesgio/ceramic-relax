@@ -1,5 +1,5 @@
 import { touchRect } from './paintHistory'
-import { PAINT_SIZE as S, getSurface, markDirty, uvToPx, type Side } from './paintSurface'
+import { PAINT_SIZE as S, getSurface, markDirty, uvToPx, type SurfaceId } from './paintSurface'
 import { stampDetail, stampPath, type StampId } from './stamps'
 
 // Desenho no canvas da peça. Como U = ângulo e V = comprimento do perfil,
@@ -28,7 +28,7 @@ function wrapped(x: number, halfW: number, draw: (cx: number) => void) {
   }
 }
 
-function withPaint(side: Side, color: string | null, draw: (ctx: CanvasRenderingContext2D) => void) {
+function withPaint(side: SurfaceId, color: string | null, draw: (ctx: CanvasRenderingContext2D) => void) {
   const { ctx } = getSurface(side)
   ctx.save()
   if (color) {
@@ -50,7 +50,7 @@ function withPaint(side: Side, color: string | null, draw: (ctx: CanvasRendering
  * (em voltas, com sinal); sem ele, usa o caminho mais curto entre os dois U.
  */
 export function paintSegment(
-  side: Side,
+  side: SurfaceId,
   length: number,
   a: SurfacePoint,
   b: SurfacePoint,
@@ -88,7 +88,7 @@ export function paintSegment(
 }
 
 /** Faixa reta: preenche todas as linhas entre duas alturas (o torno faz a volta inteira) */
-export function paintBand(side: Side, length: number, v0: number, v1: number, half: number, color: string) {
+export function paintBand(side: SurfaceId, length: number, v0: number, v1: number, half: number, color: string) {
   withPaint(side, color, (ctx) => {
     const h = half * pxPerWorld(1, length).sy
     const yTop = uvToPx(0, Math.max(v0, v1))[1] - h
@@ -99,7 +99,7 @@ export function paintBand(side: Side, length: number, v0: number, v1: number, ha
 }
 
 /** Balde: pinta o lado inteiro, de cima para baixo até `fraction` (0 a 1) da altura */
-export function fillBucket(side: Side, color: string, from: number, to: number) {
+export function fillBucket(side: SurfaceId, color: string, from: number, to: number) {
   withPaint(side, color, (ctx) => {
     const y0 = from * S
     const y1 = to * S
@@ -121,7 +121,7 @@ export function stampRepeatCount(r: number, radius: number) {
 
 /** Carimbo: desenha a forma vetorial; `count` > 1 repete em intervalos iguais de ângulo */
 export function paintStamp(
-  side: Side,
+  side: SurfaceId,
   length: number,
   p: SurfacePoint,
   id: StampId,

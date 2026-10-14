@@ -10,7 +10,7 @@ export function WheelController() {
   useFrame((_, delta) => {
     const dt = Math.min(delta, 0.1)
     const s = useGameStore.getState()
-    const active = s.phase === 'modeling' || s.phase === 'painting'
+    const active = s.phase === 'modeling' || s.phase === 'finishing' || s.phase === 'painting'
 
     let target = 0
     if (active) {

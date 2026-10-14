@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { animated, useSpring } from '@react-spring/three'
-import { LatheGeometry, MeshStandardMaterial, Vector2, type BufferGeometry, type Group, type Mesh } from 'three'
+import { BufferAttribute, DynamicDrawUsage, LatheGeometry, MeshStandardMaterial, Vector2, type BufferGeometry, type Group, type Mesh } from 'three'
 import { useGameStore } from '../store/useGameStore'
 import { WHEEL_TOP_Y, wheelRuntime } from '../wheel/wheelRuntime'
 import { createClayTexture } from './clayTexture'
@@ -14,13 +14,23 @@ import {
 } from './profile'
 import { potteryRuntime } from './potteryRuntime'
 import { getGlazeMaterials } from '../paint/glazeMaterial'
+import { MARKS_BUMP_SCALE, getMarksTexture } from './clayMarks'
+import { PIECE_CRACK, applyClayHydration } from './crackShader'
+import { PieceHandles } from '../finishing/PieceHandles'
 
 const SEGMENTS = 64
 
 /** Cria a LatheGeometry uma única vez, com a quantidade fixa de pontos */
 function makeLathe(count: number) {
   const pts = Array.from({ length: count }, (_, j) => new Vector2(0.5, j * 0.01))
-  return new LatheGeometry(pts, SEGMENTS)
+  const geo = new LatheGeometry(pts, SEGMENTS)
+  // umidade e fissuras por vértice (escritas pelo HydrationController; 0 = úmida e lisa)
+  for (const name of ['aDry', 'aCrack']) {
+    const attr = new BufferAttribute(new Float32Array(geo.attributes.position.count), 1)
+    attr.setUsage(DynamicDrawUsage)
+    geo.setAttribute(name, attr)
+  }
+  return geo
 }
 
 // senos e cossenos de cada coluna da revolução (mesma ordem da LatheGeometry)
@@ -105,8 +115,8 @@ export function PotteryMesh() {
   const lastProfile = useRef<Profile | null>(null)
 
   const pieceId = useGameStore((s) => s.pieceId)
-  // na tela inicial o torno fica vazio; a bola cai quando o jogador começa
-  const visible = useGameStore((s) => s.phase !== 'home')
+  // na tela inicial e no preparo o torno fica vazio; a bola cai quando chega ao torno
+  const visible = useGameStore((s) => s.phase !== 'home' && s.phase !== 'prep')
   const droppedPiece = useRef(-1)
   const reduceMotion = useGameStore((s) => s.settings.reduceMotion)
 
@@ -115,15 +125,27 @@ export function PotteryMesh() {
   const outerPts = useMemo(() => new Float32Array(OUTER_POINT_COUNT * 2), [])
   const innerPts = useMemo(() => new Float32Array(INNER_POINT_COUNT * 2), [])
   const clayMap = useMemo(() => createClayTexture(), [])
-  const clay = useMemo(
-    () => ({
-      outer: new MeshStandardMaterial({ map: clayMap, roughness: 0.62, metalness: 0 }),
+  const clay = useMemo(() => {
+    const materials = {
+      outer: new MeshStandardMaterial({
+        map: clayMap,
+        roughness: 0.62,
+        metalness: 0,
+        // marquinhas das bolhas que sobraram no preparo
+        bumpMap: getMarksTexture(),
+        bumpScale: MARKS_BUMP_SCALE,
+      }),
       inner: new MeshStandardMaterial({ map: clayMap, color: '#E7CBBE', roughness: 0.7, metalness: 0 }),
-    }),
-    [clayMap],
-  )
+    }
+    // a aparência mostra a umidade: úmida, secando, seca com fissuras, encharcada
+    applyClayHydration(materials.outer, PIECE_CRACK, true)
+    applyClayHydration(materials.inner, PIECE_CRACK, true)
+    return materials
+  }, [clayMap])
   // da pintura em diante a peça vira biscoito com o esmalte por cima
-  const glazed = useGameStore((s) => s.phase !== 'home' && s.phase !== 'modeling')
+  const glazed = useGameStore(
+    (s) => s.phase !== 'home' && s.phase !== 'prep' && s.phase !== 'modeling' && s.phase !== 'finishing',
+  )
   const glaze = useMemo(() => getGlazeMaterials(), [])
   const carrier = useRef<Group>(null)
 
@@ -194,7 +216,9 @@ export function PotteryMesh() {
       } else {
         c.position.set(0, WHEEL_TOP_Y, 0)
         c.scale.setScalar(1)
-        c.visible = true
+        // torno vazio na tela inicial e enquanto a argila é preparada na bancada
+        const phase = useGameStore.getState().phase
+        c.visible = phase !== 'home' && phase !== 'prep'
       }
     }
 
@@ -230,6 +254,8 @@ export function PotteryMesh() {
             castShadow
             receiveShadow
           />
+          {/* alças do acabamento: giram e viajam junto com a peça */}
+          <PieceHandles glazed={glazed} />
           </group>
         </animated.group>
       </animated.group>

@@ -20,7 +20,7 @@ export function PotteryCursor() {
     if (!g || !ring.current || !disc.current) return
     const c = potteryRuntime.cursor
     const phase = useGameStore.getState().phase
-    const show = c.visible && (phase === 'modeling' || phase === 'painting')
+    const show = c.visible && (phase === 'modeling' || phase === 'finishing' || phase === 'painting')
 
     const ringMat = ring.current.material as MeshBasicMaterial
     const discMat = disc.current.material as MeshBasicMaterial

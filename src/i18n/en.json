@@ -15,15 +15,117 @@
     "home": "Home",
     "undo": "Undo"
   },
+  "prep": {
+    "steps": {
+      "cut": "Amount",
+      "throw": "Bubbles",
+      "roll": "Rolling"
+    },
+    "stepsLabel": "Clay prep steps",
+    "refsLabel": "Amount of clay",
+    "refs": {
+      "S": "S",
+      "M": "M",
+      "L": "L"
+    },
+    "refNames": {
+      "S": "cup, little pot",
+      "M": "mug, bowl",
+      "L": "tall vase"
+    },
+    "cut": "Cut",
+    "usePrepared": "Use prepared clay",
+    "toRoll": "Start rolling",
+    "fold": "Fold",
+    "toWheel": "Take to the wheel",
+    "hint": {
+      "cutDesktop": "Drag the wire along the block to choose the amount",
+      "cutTouch": "Slide your finger along the block to choose the amount",
+      "throwDesktop": "Click, pull up and let go to throw",
+      "throwTouch": "Swipe down quickly to throw",
+      "throwDone": "No more bubbles! Time for the rolling pin",
+      "rollDesktop": "Drag back and forth to roll the clay",
+      "rollTouch": "Drag back and forth to roll the clay",
+      "foldDesktop": "Double-click to fold the clay in half",
+      "foldTouch": "Double-tap to fold the clay in half",
+      "ready": "A smooth, shiny ball!"
+    }
+  },
   "modeling": {
-    "ready": "Done, let's paint!",
+    "ready": "Done!",
     "hint": {
       "stoppedDesktop": "Hold SPACE to spin the wheel",
       "stoppedTouch": "Slide the pedal up to spin the wheel",
       "sideDesktop": "Hover the side to thin · click and drag to widen",
       "sideTouch": "Slide one finger on the side to thin · two fingers widen",
       "topDesktop": "Drag the top to stretch or flatten · click the top to open it",
-      "topTouch": "Drag the top to stretch · tap the top to open it"
+      "topTouch": "Drag the top to stretch · tap the top to open it",
+      "spongeDesktop": "Hold the click on the piece to wet the clay",
+      "spongeTouch": "Hold your finger on the piece to wet the clay",
+      "spongeEmptyDesktop": "The sponge is dry: press E or click the bucket to wet it again",
+      "spongeEmptyTouch": "The sponge is dry: tap the sponge to wet it again",
+      "dryingDesktop": "The clay is turning dull: press E to grab the sponge",
+      "dryingTouch": "The clay is turning dull: tap the sponge"
+    },
+    "sponge": "Sponge"
+  },
+  "finishing": {
+    "back": "Back to shaping",
+    "rib": "Ribber",
+    "handle": "Handle",
+    "handlesLabel": "Handle shapes",
+    "lockedLabel": "Available in the shop",
+    "handles": {
+      "ring": "Ring",
+      "ear": "Ear",
+      "double": "Double",
+      "tall": "Tall"
+    },
+    "knobs": {
+      "height": "Height",
+      "opening": "Opening",
+      "thickness": "Thickness"
+    },
+    "remove": "Remove handle",
+    "skip": "Skip finishing",
+    "toPainting": "Let's paint!",
+    "hint": {
+      "pickDesktop": "Pick the ribber or a handle from the bar",
+      "pickTouch": "Pick the ribber or a handle from the bar",
+      "ribStoppedDesktop": "Hold SPACE to spin the wheel and hold the click on the side to rib",
+      "ribStoppedTouch": "Spin the wheel with the pedal and hold your finger on the side to rib",
+      "ribDesktop": "Hold the click on the side of the piece to carve grooves",
+      "ribTouch": "Hold your finger on the side of the piece to carve grooves",
+      "placeDesktop": "Click the side of the piece to attach the handle",
+      "placeTouch": "Tap the side of the piece to attach the handle",
+      "adjustDesktop": "Drag the dots to adjust the handle",
+      "adjustTouch": "Drag the dots to adjust the handle",
+      "fluteDesktop": "Click the side to carve the flutes · click again to remove them",
+      "fluteTouch": "Tap the side to carve the flutes · tap again to remove them",
+      "holeDesktop": "Click the side of the piece to cut a little hole",
+      "holeTouch": "Tap the side of the piece to cut a little hole"
+    },
+    "toast": {
+      "locked": "This handle is in the shop",
+      "maxHandles": "This piece already has plenty of handles",
+      "jointCrack": "The piece was dry: the joint got a little crack",
+      "ribNeedsSpin": "The ribber needs the wheel spinning",
+      "maxHoles": "This piece already has plenty of holes"
+    },
+    "hole": "Holes",
+    "holesLabel": "Hole tool tips",
+    "holes": {
+      "round": "Round",
+      "star": "Star",
+      "heart": "Heart",
+      "drop": "Drop"
+    },
+    "ribsLabel": "Ribbers",
+    "ribs": {
+      "horizontal": "Horizontal",
+      "fine": "Fine flutes",
+      "medium": "Medium flutes",
+      "wide": "Wide flutes"
     }
   },
   "wheel": {
@@ -69,7 +171,17 @@
       "flower": "Flower",
       "drop": "Drop",
       "leaf": "Leaf",
-      "dot": "Dot"
+      "dot": "Dot",
+      "monstera": "Monstera leaf",
+      "paw": "Paw print",
+      "moon": "Moon",
+      "fish": "Little fish",
+      "cloud": "Cloud",
+      "mushroom": "Mushroom",
+      "cactus": "Cactus",
+      "butterfly": "Butterfly",
+      "sun": "Sun",
+      "cherry": "Cherry"
     },
     "colors": {
       "cream": "Cream white",
@@ -83,7 +195,13 @@
       "lavender": "Lavender blue",
       "lilac": "Lilac",
       "caramel": "Caramel brown",
-      "graphite": "Soft graphite"
+      "graphite": "Soft graphite",
+      "gold": "Gold",
+      "aqua": "Aqua",
+      "wine": "Wine",
+      "navy": "Night blue",
+      "mustard": "Mustard",
+      "blush": "Dusty rose"
     },
     "glazeHint": "Colors get brighter after the kiln",
     "glazeHintShort": "Colors brighten in the kiln",
@@ -132,7 +250,11 @@
     "note": "1080 × 1350 PNG with a soft frame and a small logo",
     "saved": "Image saved!",
     "shared": "Image shared!",
-    "error": "Couldn't save the image. Please try again."
+    "error": "Couldn't save the image. Please try again.",
+    "crackled": "Crackled",
+    "rare": "Rare piece · kintsugi",
+    "kintsugi": "Restore with kintsugi",
+    "kintsugiNote": "Free. Or keep it crackled: it is lovely too."
   },
   "options": {
     "title": "Options",
@@ -156,6 +278,236 @@
     "langNames": {
       "pt": "Português",
       "en": "English"
+    }
+  },
+  "village": {
+    "knock": "Knock knock! Someone is at the door",
+    "special": "Special order",
+    "accept": "Accept",
+    "decline": "Not now",
+    "close": "Close",
+    "orderLabel": "{{name}}'s order",
+    "anyPiece": "Any piece will do: {{name}} will love it.",
+    "earned": "+{{coins}} coins · you have {{total}}",
+    "deliver": "Give it to {{name}}",
+    "animals": {
+      "capi": {
+        "name": "Capi",
+        "orders": {
+          "open1": "Something for my afternoon tea, please.",
+          "open2": "A piece in an earthy tone, nice and cozy.",
+          "special1": "A short mug, sage green, with little leaves."
+        },
+        "goodbye": "No rush at all. I will come back another time, alright?",
+        "react": {
+          "none": "What a different piece! I loved the surprise, truly.",
+          "some": "Oh look, it turned out lovely! My tea will taste even better.",
+          "all": "It is exactly what I imagined! Thank you, dear."
+        }
+      },
+      "soneca": {
+        "name": "Soneca",
+        "orders": {
+          "open1": "A little spot... for my little plant...",
+          "open2": "Something bluish... very calm...",
+          "special1": "A wide vase... lavender blue... with little stars..."
+        },
+        "goodbye": "That is fine... I will take a nap and come back...",
+        "react": {
+          "none": "What a different piece... I loved the surprise...",
+          "some": "Oh look... it turned out lovely...",
+          "all": "It is exactly... what I dreamed of..."
+        }
+      },
+      "tuco": {
+        "name": "Tuco",
+        "orders": {
+          "open1": "Something super colorful for the party!",
+          "open2": "A yellow piece, nice and cheerful!",
+          "special1": "A tall vase with stripes: yellow, coral and graphite!"
+        },
+        "goodbye": "Cool! I will be back later with more party!",
+        "react": {
+          "none": "Wow, what a different piece! I loved the surprise!",
+          "some": "Oh look, it turned out GORGEOUS!",
+          "all": "It is EXACTLY what I imagined! It will be the hit of the party!"
+        }
+      },
+      "mica": {
+        "name": "Mica",
+        "orders": {
+          "open1": "Something teeny-tiny for my collection!",
+          "open2": "Something orange? Really orange!",
+          "special1": "A short little pot, orange, with polka dots!"
+        },
+        "goodbye": "Okay! I will go hunt for treasures and be right back!",
+        "react": {
+          "none": "What a different piece! It will be the rarest in my collection!",
+          "some": "Oh look, it turned out lovely! I know just where to keep it!",
+          "all": "It is exactly what I imagined! Number one in my collection!"
+        }
+      },
+      "tata": {
+        "name": "Tatá",
+        "orders": {
+          "open1": "Something round... if it is no trouble...",
+          "open2": "Something peach colored... only if you can, okay?",
+          "special1": "A round bowl, peach... with little hearts..."
+        },
+        "goodbye": "Oh, that is okay... sorry to bother you... see you...",
+        "react": {
+          "none": "What a different piece... I loved the surprise, really...",
+          "some": "Oh look... it turned out lovely... thank you...",
+          "all": "It... it is exactly what I imagined! Thank you so much!"
+        }
+      },
+      "rosinha": {
+        "name": "Rosinha",
+        "orders": {
+          "open1": "Something that reminds me of the river...",
+          "open2": "A pink piece, just like me!",
+          "special1": "A tall, slim vase, sky blue, with little raindrops."
+        },
+        "goodbye": "That is fine, I will go for a little swim and come back!",
+        "react": {
+          "none": "What a different piece! I loved the surprise, it feels like a dream.",
+          "some": "Oh look, it turned out lovely! It shines like the river.",
+          "all": "It is exactly what I imagined! How lovely!"
+        }
+      },
+      "guara": {
+        "name": "Guará",
+        "orders": {
+          "open1": "Something elegant for my table, if you please.",
+          "open2": "A sober piece, in graphite.",
+          "special1": "A tall vase, matte graphite, no pattern."
+        },
+        "goodbye": "No problem. I shall return another time.",
+        "react": {
+          "none": "What a different piece. I loved the surprise, truly.",
+          "some": "Oh look, it turned out lovely. Thank you very much.",
+          "all": "It is exactly what I imagined. A work of art."
+        }
+      }
+    },
+    "challenge": "Challenge",
+    "challenges": {
+      "color-gold": "A little gold pot for my collection! So shiny!",
+      "color-aqua": "Something aqua, the color of the river in the morning.",
+      "color-wine": "A wine-colored vase, for special dinners.",
+      "color-navy": "Something night blue... like the sky when I sleep...",
+      "color-mustard": "A mustard piece with stripes, for the party!",
+      "color-blush": "A little dusty rose bowl... if you can...",
+      "stamp-monstera": "A vase with monstera leaves... nice and green...",
+      "stamp-paw": "A bowl with paw prints... just like mine...",
+      "stamp-moon": "A piece with moons, for quiet nights.",
+      "stamp-fish": "Something blue with little fish, like in my river!",
+      "stamp-cloud": "A piece with fluffy clouds... for dreaming...",
+      "stamp-mushroom": "A mug with mushrooms, like the forest.",
+      "stamp-cactus": "A vase with cacti. Elegant and sturdy.",
+      "stamp-butterfly": "A little pot with butterflies for my collection!",
+      "stamp-sun": "A yellow piece with suns! For the whole summer!",
+      "stamp-cherry": "A bowl with cherries, for dessert.",
+      "tool-flute": "A tall fluted vase, very elegant.",
+      "hole-star": "A lamp with little star holes... to fall asleep watching the sky...",
+      "hole-heart": "A little pot with heart holes... to let the light through...",
+      "hole-drop": "A strainer with drop holes, for my tea.",
+      "handle-ear": "A big mug with a handle, to hold it nice and warm.",
+      "handle-double": "An amphora to keep river water.",
+      "handle-tall": "A striped pitcher with a tall handle, for the party juice!"
+    }
+  },
+  "shop": {
+    "open": "Shop",
+    "title": "Shop",
+    "intro": "Trade the coins from your animal friends for new things for the studio. The little face on an item shows who has a special order waiting for it.",
+    "close": "Close the shop",
+    "coinsLabel": "You have {{n}} coins",
+    "owned": "Already yours",
+    "ownedShort": "Yours",
+    "soon": "Coming soon",
+    "buy": "Buy for {{price}}",
+    "missing": "{{n}} more coins needed",
+    "bought": "Bought! It is unlocked now.",
+    "boughtChallenge": "Bought! Someone will show up with a special order...",
+    "welcome": "Welcome gift: 40 coins!",
+    "challenge": "Unlocks a challenge from {{name}}",
+    "challengeDone": "{{name}}'s challenge is done",
+    "categories": {
+      "colors": "Extra colors",
+      "stamps": "Stamps",
+      "tools": "Finishing tools",
+      "handles": "Handles",
+      "prepared": "Prepared clay",
+      "shapes": "Starting shapes",
+      "clays": "Clays",
+      "decor": "Studio decor",
+      "music": "Music",
+      "adornments": "Adornments"
+    },
+    "desc": {
+      "colors": "A new color in the painting palette.",
+      "stamps": "A new stamp for painting.",
+      "tools": "A new finishing tool.",
+      "handles": "A new handle shape for finishing.",
+      "prepared": "Unlocks \"Use prepared clay\": pick the amount and go straight to the wheel.",
+      "shapes": "A ready-made base to start a piece. Coming in a future update.",
+      "clays": "A new kind of clay. Coming in a future update.",
+      "decor": "Decoration for the studio. Coming in a future update.",
+      "music": "A new lo-fi track. Coming in a future update.",
+      "adornments": "A new detail for your pieces. Coming in a future update."
+    },
+    "items": {
+      "color-gold": "Gold",
+      "color-aqua": "Aqua",
+      "color-wine": "Wine",
+      "color-navy": "Night blue",
+      "color-mustard": "Mustard",
+      "color-blush": "Dusty rose",
+      "stamp-monstera": "Monstera leaf",
+      "stamp-paw": "Paw print",
+      "stamp-moon": "Moon",
+      "stamp-fish": "Little fish",
+      "stamp-cloud": "Cloud",
+      "stamp-mushroom": "Mushroom",
+      "stamp-cactus": "Cactus",
+      "stamp-butterfly": "Butterfly",
+      "stamp-sun": "Sun",
+      "stamp-cherry": "Cherry",
+      "tool-flute": "Vertical ribber",
+      "hole-star": "Star tip",
+      "hole-heart": "Heart tip",
+      "hole-drop": "Drop tip",
+      "handle-ear": "Ear handle",
+      "handle-double": "Double handle",
+      "handle-tall": "Tall handle",
+      "prepared-clay": "Prepared clay",
+      "shape-teapot": "Teapot",
+      "shape-pitcher": "Pitcher",
+      "shape-deep-plate": "Deep plate",
+      "shape-goblet": "Goblet",
+      "clay-terracotta": "Terracotta",
+      "clay-porcelain": "Porcelain",
+      "clay-black": "Black clay",
+      "decor-lamp": "Lamp",
+      "decor-rug": "Rug",
+      "decor-hammock": "Hammock",
+      "decor-curtain": "Curtain",
+      "decor-painting": "Painting",
+      "decor-bookcase": "Bookcase",
+      "decor-pouf": "Pouf",
+      "decor-clock": "Clock",
+      "decor-bunting": "Bunting",
+      "decor-tea-table": "Tea table",
+      "decor-cushions": "Cushions",
+      "decor-fern": "Fern",
+      "music-rain": "Rain on the window",
+      "music-sunday": "Sunday afternoon",
+      "music-breakfast": "Breakfast",
+      "adorn-wavy-rim": "Wavy rim",
+      "adorn-feet": "Little feet",
+      "adorn-lid": "Lid with knob",
+      "adorn-spout": "Pitcher spout"
     }
   }
 }

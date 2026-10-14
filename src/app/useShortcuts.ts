@@ -11,6 +11,7 @@ export function useShortcuts() {
       const s = useGameStore.getState()
       if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z') {
         if (s.phase === 'modeling') s.undo()
+        else if (s.phase === 'finishing') s.undoFinish()
         else if (s.phase === 'painting') undoPaint()
         else return
         e.preventDefault()

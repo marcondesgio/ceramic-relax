@@ -1,7 +1,11 @@
 import { normalize, noiseSource, prng, render } from './synth'
 
-// Música lo-fi gerada por síntese: piano elétrico com tremolo, baixo, bateria preguiçosa
-// com swing, melodia pentatônica esparsa e chiado de vinil. Duas faixas que se alternam.
+// Música lo-fi gerada por síntese: piano elétrico com tremolo e eco suave, baixo, bateria
+// macia com swing (kick redondo e escovinha) e melodia pentatônica esparsa. Sem chiado:
+// renderizada a 44,1 kHz para os agudos ficarem limpos. Duas faixas que se alternam.
+
+/** Taxa da música (os efeitos curtos usam 22,05 kHz) */
+const MUSIC_RATE = 44100
 
 const BPM = 72
 const BEAT = 60 / BPM
@@ -69,56 +73,83 @@ function epNote(ctx: BaseAudioContext, out: AudioNode, note: number, t: number, 
   }
 }
 
+/** Kick redondo: senoide que desce de tom, com ataque curtinho (sem estalo) */
 function kick(ctx: BaseAudioContext, out: AudioNode, t: number, vel: number) {
   const o = ctx.createOscillator()
-  o.frequency.setValueAtTime(115, t)
-  o.frequency.exponentialRampToValueAtTime(42, t + 0.14)
+  o.frequency.setValueAtTime(95, t)
+  o.frequency.exponentialRampToValueAtTime(45, t + 0.12)
   const g = ctx.createGain()
-  g.gain.setValueAtTime(vel, t)
-  g.gain.exponentialRampToValueAtTime(0.001, t + 0.32)
+  g.gain.setValueAtTime(0, t)
+  g.gain.linearRampToValueAtTime(vel, t + 0.004)
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.36)
   o.connect(g).connect(out)
   o.start(t)
-  o.stop(t + 0.35)
+  o.stop(t + 0.4)
 }
 
-function snare(ctx: BaseAudioContext, out: AudioNode, t: number, vel: number, seed: number) {
-  const n = noiseSource(ctx, 0.2, seed)
+/** Escovinha no lugar da caixa: ruído grave e abafado, com ataque e cauda suaves */
+function brush(ctx: BaseAudioContext, out: AudioNode, t: number, vel: number, seed: number) {
+  const n = noiseSource(ctx, 0.3, seed)
+  const lp = ctx.createBiquadFilter()
+  lp.type = 'lowpass'
+  lp.frequency.value = 2200
   const bp = ctx.createBiquadFilter()
   bp.type = 'bandpass'
-  bp.frequency.value = 1700
-  bp.Q.value = 0.7
+  bp.frequency.value = 900
+  bp.Q.value = 0.5
   const g = ctx.createGain()
-  g.gain.setValueAtTime(vel, t)
-  g.gain.exponentialRampToValueAtTime(0.001, t + 0.18)
-  n.connect(bp).connect(g).connect(out)
+  g.gain.setValueAtTime(0, t)
+  g.gain.linearRampToValueAtTime(vel, t + 0.012)
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.24)
+  n.connect(lp).connect(bp).connect(g).connect(out)
   n.start(t)
+  n.stop(t + 0.3)
 }
 
-function hat(ctx: BaseAudioContext, out: AudioNode, t: number, vel: number, seed: number) {
-  const n = noiseSource(ctx, 0.05, seed)
-  const hp = ctx.createBiquadFilter()
-  hp.type = 'highpass'
-  hp.frequency.value = 7000
+/** Shaker bem baixinho, só um sopro de ritmo (nada de chiado agudo) */
+function shaker(ctx: BaseAudioContext, out: AudioNode, t: number, vel: number, seed: number) {
+  const n = noiseSource(ctx, 0.08, seed)
+  const bp = ctx.createBiquadFilter()
+  bp.type = 'bandpass'
+  bp.frequency.value = 3800
+  bp.Q.value = 1.2
   const g = ctx.createGain()
-  g.gain.setValueAtTime(vel, t)
-  g.gain.exponentialRampToValueAtTime(0.001, t + 0.04)
-  n.connect(hp).connect(g).connect(out)
+  g.gain.setValueAtTime(0, t)
+  g.gain.linearRampToValueAtTime(vel, t + 0.01)
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.06)
+  n.connect(bp).connect(g).connect(out)
   n.start(t)
+  n.stop(t + 0.08)
 }
 
 /** Renderiza uma faixa completa (8 compassos, ~26,7 s) */
 export async function renderTrack(spec: TrackSpec) {
   const buf = await render(TRACK_SECONDS, (ctx) => {
     const rnd = prng(spec.seed * 97)
-    // tudo passa por um passa-baixa: som abafado de fita
+    // tudo passa por um passa-baixa suave: som quentinho de fita, sem ficar abafado
     const master = ctx.createBiquadFilter()
     master.type = 'lowpass'
-    master.frequency.value = 2400
+    master.frequency.value = 3400
+    master.Q.value = 0.5
     master.connect(ctx.destination)
+
+    // eco discreto e escuro para o piano e a melodia (ambiência no lugar do chiado)
+    const echo = ctx.createDelay(1)
+    echo.delayTime.value = BEAT * 0.75
+    const echoTone = ctx.createBiquadFilter()
+    echoTone.type = 'lowpass'
+    echoTone.frequency.value = 1600
+    const feedback = ctx.createGain()
+    feedback.gain.value = 0.28
+    const wet = ctx.createGain()
+    wet.gain.value = 0.22
+    echo.connect(echoTone).connect(feedback).connect(echo)
+    echoTone.connect(wet).connect(master)
 
     const keys = ctx.createGain()
     keys.gain.value = 0.32
     keys.connect(master)
+    keys.connect(echo)
     // tremolo do piano elétrico
     const trem = ctx.createOscillator()
     trem.frequency.value = 4.8
@@ -156,13 +187,13 @@ export async function renderTrack(spec: TrackSpec) {
       }
       // bateria preguiçosa (entra a partir do 2º compasso)
       if (bar > 0) {
-        kick(ctx, drums, t0, 0.8)
-        kick(ctx, drums, t0 + BEAT * 2 + (bar % 2 ? BEAT * 0.5 : 0), 0.6)
-        snare(ctx, drums, t0 + BEAT + swing, 0.35, bar * 10 + 1)
-        snare(ctx, drums, t0 + BEAT * 3 + swing, 0.35, bar * 10 + 2)
-        for (let e = 0; e < 8; e++) {
-          const t = t0 + e * (BEAT / 2) + (e % 2 ? swing * 1.5 : 0)
-          hat(ctx, drums, t, 0.06 + rnd() * 0.06, bar * 100 + e)
+        kick(ctx, drums, t0, 0.75)
+        kick(ctx, drums, t0 + BEAT * 2 + (bar % 2 ? BEAT * 0.5 : 0), 0.55)
+        brush(ctx, drums, t0 + BEAT + swing, 0.32, bar * 10 + 1)
+        brush(ctx, drums, t0 + BEAT * 3 + swing, 0.32, bar * 10 + 2)
+        for (let e = 1; e < 8; e += 2) {
+          const t = t0 + e * (BEAT / 2) + swing * 1.5
+          shaker(ctx, drums, t, 0.025 + rnd() * 0.015, bar * 100 + e)
         }
       }
       // melodia na segunda metade: poucas notas, bem calmas
@@ -183,6 +214,7 @@ export async function renderTrack(spec: TrackSpec) {
           g.gain.linearRampToValueAtTime(0.09, t + 0.04)
           g.gain.exponentialRampToValueAtTime(0.001, t + BEAT * 1.2)
           o.connect(g).connect(master)
+          g.connect(echo)
           o.start(t)
           vib.start(t)
           o.stop(t + BEAT * 1.3)
@@ -190,24 +222,18 @@ export async function renderTrack(spec: TrackSpec) {
         }
       }
     }
+  }, MUSIC_RATE)
+  return fadeEdges(normalize(buf, 0.7))
+}
 
-    // vinil: chiado bem baixinho + estalos raros
-    const hiss = noiseSource(ctx, TRACK_SECONDS, spec.seed * 13)
-    const hlp = ctx.createBiquadFilter()
-    hlp.type = 'lowpass'
-    hlp.frequency.value = 3500
-    const hg = ctx.createGain()
-    hg.gain.value = 0.012
-    hiss.connect(hlp).connect(hg).connect(ctx.destination)
-    hiss.start()
-    for (let i = 0; i < 40; i++) {
-      const t = rnd() * TRACK_SECONDS
-      const c = noiseSource(ctx, 0.004, 900 + i)
-      const cg = ctx.createGain()
-      cg.gain.value = 0.05 + rnd() * 0.08
-      c.connect(cg).connect(ctx.destination)
-      c.start(t)
-    }
-  })
-  return normalize(buf, 0.7)
+/** Entrada e saída de 30 ms: a troca de faixa não estala */
+function fadeEdges(buf: AudioBuffer) {
+  const d = buf.getChannelData(0)
+  const n = Math.round(0.03 * buf.sampleRate)
+  for (let k = 0; k < n; k++) {
+    const g = k / n
+    d[k] *= g
+    d[d.length - 1 - k] *= g
+  }
+  return buf
 }

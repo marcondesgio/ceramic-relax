@@ -4,25 +4,10 @@ import pt from './pt.json'
 import en from './en.json'
 
 export type Lang = 'pt' | 'en'
-const STORAGE_KEY = 'ceramic-relax:lang'
 
-// Idioma inicial: escolha salva no aparelho; senão, o idioma do navegador
+// Idioma inicial pelo navegador; a escolha salva no aparelho chega pela hidratação (store/saveGame.ts)
 export function detectLang(): Lang {
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY)
-    if (saved === 'pt' || saved === 'en') return saved
-  } catch {
-    /* armazenamento indisponível (aba anônima etc.) */
-  }
   return navigator.language?.toLowerCase().startsWith('pt') ? 'pt' : 'en'
-}
-
-export function saveLang(lang: Lang) {
-  try {
-    localStorage.setItem(STORAGE_KEY, lang)
-  } catch {
-    /* ignora */
-  }
 }
 
 i18n.use(initReactI18next).init({
