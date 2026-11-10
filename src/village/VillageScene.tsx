@@ -1,20 +1,35 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { RoundedBox } from '@react-three/drei'
-import { ExtrudeGeometry, MeshStandardMaterial, Shape, type Group, type Mesh } from 'three'
+import { ExtrudeGeometry, MeshBasicMaterial, MeshStandardMaterial, Shape, Vector3, type Group, type Mesh } from 'three'
 import { useGameStore } from '../store/useGameStore'
 import type { AnimalId } from './animals'
-import { AnimalModel, type AnimalParts } from './AnimalModel'
+import type { AnimalParts } from './AnimalModel'
+import { CharacterModel, preloadCharacters } from './CharacterModel'
 import { REACT_TIME } from './VillageController'
-import { ANIMAL_SCALE, DOOR, villageRuntime as rt } from './villageRuntime'
-import { LOOKS } from './animals'
+import { ANIMAL_SCALE, BAG_IN, DOOR, villageRuntime as rt } from './villageRuntime'
+import { BAGS, LOOKS } from './animals'
 
-// Porta do ateliê e o bichinho visitante (com as 4 animações: chegar, esperar, reagir, ir embora).
+// os modelos finais baixam logo depois da abertura, sem atrasar a primeira tela
+setTimeout(preloadCharacters, 2000)
+
+// Porta do ateliê e o bichinho visitante (com as 4 animações: chegar, esperar, reagir, ir embora)
+// e a sacolinha em que ele leva a peça entregue.
 
 const DOOR_COLOR = '#AFC8A6'
 const FRAME = '#E8C39A'
 const OUTSIDE = '#E8F4E4'
 const HEART = '#F4A0B5'
+const CREAM = '#FFF4E6'
+const TISSUE = '#FFFBF5'
+
+/** Sacolinha (unidades de mundo): corpo, alça acima do corpo */
+const BAG_W = 0.48
+const BAG_H = 0.5
+const BAG_D = 0.26
+const BAG_HANDLE = 0.15
+/** Duração do brilhinho quando a peça entra na sacola */
+const PUFF_TIME = 0.7
 
 /** Tique de espera de cada um (a cada poucos segundos) */
 const TIC_EVERY = 4.5
@@ -85,6 +100,131 @@ function heartShape() {
   return s
 }
 
+/** Saída com um pouquinho de "mola" (passa de 1 e volta) */
+const popOut = (k: number) => 1 + 2.2 * (k - 1) ** 3 + 1.2 * (k - 1) ** 2
+
+/**
+ * Sacolinha de papel na mão do bichinho: aparece quando ele chega à mesinha para receber a
+ * peça, recebe a peça e vai embora com ele, balançando a cada passo. Papel liso, faixa creme,
+ * coraçãozinho na frente e papel de seda saindo pela boca depois que a peça entra.
+ */
+function Bag({ animal }: { animal: AnimalId }) {
+  const holder = useRef<Group>(null)
+  const pivot = useRef<Group>(null)
+  const mouth = useRef<Group>(null)
+  const tissue = useRef<Group>(null)
+  const { hand, color } = BAGS[animal]
+  const h = LOOKS[animal].height * ANIMAL_SCALE
+  const at: [number, number, number] = [hand[0] * h, hand[1] * h, hand[2] * h]
+  // bichinhos de braço curto: a sacola fica menor para não arrastar no chão
+  const size = Math.min(1, (at[1] - 0.05) / (BAG_HANDLE + BAG_H))
+  const heart = useMemo(() => new ExtrudeGeometry(heartShape(), { depth: 0.2, bevelEnabled: false }), [])
+  const swing = useRef(0)
+
+  useFrame((state, delta) => {
+    const g = holder.current
+    const p = pivot.current
+    if (!g || !p) return
+    const s = useGameStore.getState()
+    const v = s.visit
+    const on = !!v && !v.declined && (v.stage === 'reacting' || v.stage === 'leaving')
+    // aparece com um "pop" quando ele chega para receber (direto, com "reduzir animações")
+    const k = !on ? 0 : v.stage === 'reacting' && !s.settings.reduceMotion ? Math.min(1, rt.stageT / BAG_IN) : 1
+    g.visible = k > 0
+    if (!g.visible) return
+    g.scale.setScalar(size * Math.max(0.001, popOut(k)))
+    // balança para frente e para trás a cada passo; parada, assenta devagar
+    const t = state.clock.elapsedTime
+    const want = rt.moving && !s.settings.reduceMotion ? Math.sin(t * 9) * 0.2 : 0
+    swing.current += (want - swing.current) * Math.min(1, delta * 8)
+    // sacudidinha quando a peça cai lá dentro
+    const bump = rt.puff.t < 0.4 ? Math.sin((rt.puff.t / 0.4) * Math.PI) * 0.12 : 0
+    p.rotation.x = swing.current
+    p.position.y = -bump * 0.15
+    if (tissue.current) tissue.current.visible = rt.take >= 1
+    // a peça mira a boca da sacola (posição do quadro anterior basta)
+    mouth.current?.getWorldPosition(rt.bagMouth)
+  })
+
+  const top = -BAG_HANDLE
+  return (
+    <group ref={holder} position={at} visible={false}>
+      <group ref={pivot}>
+        {/* alças: dois arcos que se encontram na mão */}
+        {[-1, 1].map((side) => (
+          <group key={side} position={[0, top, side * BAG_D * 0.28]} rotation-x={-side * 0.3} scale={[1, BAG_HANDLE / 0.07, 1]}>
+            <mesh>
+              <torusGeometry args={[0.07, 0.01, 6, 16, Math.PI]} />
+              <meshStandardMaterial color={CREAM} roughness={0.7} />
+            </mesh>
+          </group>
+        ))}
+        {/* corpo de papel */}
+        <RoundedBox args={[BAG_W, BAG_H, BAG_D]} radius={0.025} smoothness={2} position-y={top - BAG_H / 2} castShadow>
+          <meshStandardMaterial color={color} roughness={0.85} />
+        </RoundedBox>
+        {/* faixa creme na boca */}
+        <RoundedBox args={[BAG_W + 0.008, 0.06, BAG_D + 0.008]} radius={0.012} smoothness={2} position-y={top - 0.035}>
+          <meshStandardMaterial color={CREAM} roughness={0.8} />
+        </RoundedBox>
+        {/* coraçãozinho na frente */}
+        <mesh geometry={heart} position={[0, top - BAG_H * 0.55, BAG_D / 2 + 0.002]} scale={0.1}>
+          <meshStandardMaterial color={HEART} roughness={0.5} />
+        </mesh>
+        {/* papel de seda: aparece quando a peça já está lá dentro */}
+        <group ref={tissue} position-y={top} visible={false}>
+          {[-0.09, 0, 0.09].map((x, i) => (
+            <mesh key={i} position={[x, 0.05, (i - 1) * 0.03]} rotation-z={-x * 3}>
+              <coneGeometry args={[0.06, 0.14, 7]} />
+              <meshStandardMaterial color={TISSUE} roughness={0.9} />
+            </mesh>
+          ))}
+        </group>
+        <group ref={mouth} position-y={top - 0.04} />
+      </group>
+    </group>
+  )
+}
+
+/** Brilhinho de estrelas onde a peça entrou na sacola (ou sumiu, com "reduzir animações") */
+function Puff() {
+  const group = useRef<Group>(null)
+  const mat = useMemo(() => new MeshBasicMaterial({ color: '#FFD36B', transparent: true, toneMapped: false, depthWrite: false }), [])
+  const dirs = useMemo(
+    () => Array.from({ length: 7 }, (_, i) => new Vector3(Math.cos(i * 0.9) * 0.9, 0.5 + (i % 3) * 0.35, Math.sin(i * 0.9) * 0.6)),
+    [],
+  )
+
+  useFrame((_, delta) => {
+    const g = group.current
+    if (!g) return
+    rt.puff.t += Math.min(delta, 0.1)
+    const k = rt.puff.t / PUFF_TIME
+    g.visible = k < 1
+    if (!g.visible) return
+    const still = useGameStore.getState().settings.reduceMotion
+    g.position.copy(rt.puff.pos)
+    if (still) g.position.y += 0.4
+    g.children.forEach((m, i) => {
+      // com "reduzir animações" as estrelinhas só acendem e apagam, sem voar
+      const r = still ? 0.35 : 0.1 + k * 0.45
+      m.position.copy(dirs[i]).multiplyScalar(r)
+      m.scale.setScalar(Math.max(0.001, Math.sin(Math.PI * Math.min(1, k * 1.2)) * 0.05))
+    })
+    mat.opacity = 1 - k
+  })
+
+  return (
+    <group ref={group} visible={false}>
+      {dirs.map((_, i) => (
+        <mesh key={i} material={mat}>
+          <octahedronGeometry args={[1, 0]} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
 function Visitor({ animal }: { animal: AnimalId }) {
   const root = useRef<Group>(null)
   const parts = useRef<AnimalParts>(null)
@@ -151,7 +291,11 @@ function Visitor({ animal }: { animal: AnimalId }) {
 
     g.position.y = y * ANIMAL_SCALE
     g.rotation.y = rt.heading + spin
-    if (p.body) p.body.scale.set(1 + (1 - squash) * 0.4, squash, 1 + (1 - squash) * 0.4)
+    if (p.body) {
+      p.body.scale.set(1 + (1 - squash) * 0.4, squash, 1 + (1 - squash) * 0.4)
+      // modelo final sem esqueleto: os tiques de cabeça, orelha e rabo viram balanços do corpo todo
+      if (!p.head) p.body.rotation.set(headPitch * 0.35, headYaw * 0.5 + tailWag * 0.25, earWiggle * 0.3)
+    }
     if (p.head) {
       p.head.rotation.x = headPitch
       p.head.rotation.y = headYaw
@@ -183,8 +327,9 @@ function Visitor({ animal }: { animal: AnimalId }) {
   return (
     <group ref={root}>
       <group scale={ANIMAL_SCALE}>
-        <AnimalModel ref={parts} id={animal} />
+        <CharacterModel ref={parts} id={animal} />
       </group>
+      <Bag animal={animal} />
       <group ref={hearts} visible={false}>
         {[0, 1, 2, 3, 4, 5].map((i) => (
           <mesh key={i} geometry={heart.geo} material={heart.mat} />
@@ -199,6 +344,7 @@ export function VillageScene() {
   return (
     <>
       <Door />
+      <Puff />
       {animal && <Visitor key={animal} animal={animal} />}
     </>
   )

@@ -52,7 +52,21 @@ export const villageRuntime = {
   stageT: 0,
   /** último "Agora não" (ms): voltar ao torno logo depois não chama outro na hora */
   lastDeclineAt: 0,
+  /**
+   * Peça entregue indo para a sacolinha: -1 ainda na mesinha, 0 a 1 pulando, 1 dentro da sacola.
+   * O FiringController lê para mover a peça; o Visitor, para encher a sacola.
+   */
+  take: -1,
+  /** boca da sacolinha no mundo (atualizada a cada quadro pelo bichinho) */
+  bagMouth: new Vector3(),
+  /** brilhinho quando a peça entra na sacola (ou some, com "reduzir animações") */
+  puff: { t: 99, pos: new Vector3() },
 }
+
+/** Linha do tempo da reação (s): pulinhos primeiro, depois a peça vai para a sacola */
+export const BAG_IN = 0.35
+export const TAKE_START = 1.6
+export const TAKE_LEN = 0.75
 
 /** Começa a andar por um caminho a partir do primeiro ponto */
 export function walk(route: Vector3[]) {

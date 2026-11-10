@@ -1,8 +1,8 @@
 {
   "home": {
-    "title1": "Ceramic",
-    "title2": "Relax",
-    "tagline": "A cozy little corner to shape clay, no rush.",
+    "title1": "Cafuné",
+    "title2": "Atelier",
+    "tagline": "a cozy pottery atelier",
     "start": "Start",
     "note": "No score, no timer, no mistakes."
   },
@@ -62,8 +62,8 @@
       "topTouch": "Drag the top to stretch · tap the top to open it",
       "spongeDesktop": "Hold the click on the piece to wet the clay",
       "spongeTouch": "Hold your finger on the piece to wet the clay",
-      "spongeEmptyDesktop": "The sponge is dry: press E or click the bucket to wet it again",
-      "spongeEmptyTouch": "The sponge is dry: tap the sponge to wet it again",
+      "spongeEmptyDesktop": "The sponge is dry: click the bucket to wet it again (E puts it away)",
+      "spongeEmptyTouch": "The sponge is dry: put it away and pick it up again to wet it (or tap the bucket)",
       "dryingDesktop": "The clay is turning dull: press E to grab the sponge",
       "dryingTouch": "The clay is turning dull: tap the sponge"
     },
@@ -290,6 +290,7 @@
     "anyPiece": "Any piece will do: {{name}} will love it.",
     "earned": "+{{coins}} coins · you have {{total}}",
     "deliver": "Give it to {{name}}",
+    "tookPiece": "{{name}} took the piece home in a little bag.",
     "animals": {
       "capi": {
         "name": "Capi",
@@ -420,7 +421,7 @@
   "shop": {
     "open": "Shop",
     "title": "Shop",
-    "intro": "Trade the coins from your animal friends for new things for the studio. The little face on an item shows who has a special order waiting for it.",
+    "intro": "Trade the coins from your animal friends for new things for the studio. The little star on an item means an animal friend has a special order waiting for it.",
     "close": "Close the shop",
     "coinsLabel": "You have {{n}} coins",
     "owned": "Already yours",

@@ -110,6 +110,7 @@ export interface GameStorage {
 
 // ---------- adaptador IndexedDB ----------
 
+// nome antigo do jogo de propósito: trocar o nome do banco apagaria o progresso salvo
 const DB_NAME = 'ceramic-relax'
 const DB_VERSION = 1
 const PLAYER = 'player'

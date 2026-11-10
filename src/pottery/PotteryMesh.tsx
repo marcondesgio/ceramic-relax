@@ -181,10 +181,12 @@ export function PotteryMesh() {
 
   useEffect(() => {
     potteryRuntime.group = spinner.current
+    potteryRuntime.carrierObject = carrier.current
     potteryRuntime.outer = outer.current
     potteryRuntime.inner = inner.current
     return () => {
       potteryRuntime.group = null
+      potteryRuntime.carrierObject = null
       potteryRuntime.outer = null
       potteryRuntime.inner = null
     }

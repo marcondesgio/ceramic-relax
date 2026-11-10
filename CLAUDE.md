@@ -1,7 +1,8 @@
-# Ceramic Relax — guia para o Claude
+# Cafuné Atelier — guia para o Claude
 
-Jogo web 3D relaxante de cerâmica (React + React Three Fiber). A fonte da verdade do design é
-[docs/GDD.md](docs/GDD.md); o visual da interface está em `docs/Ceramic Relax — Interface.pdf`.
+Jogo web 3D relaxante de cerâmica (React + React Three Fiber), antes chamado "Ceramic Relax".
+A fonte da verdade do design é [docs/GDD.md](docs/GDD.md); o visual da interface está em
+`docs/Ceramic Relax — Interface.pdf`.
 Leia a seção do GDD correspondente antes de mexer em qualquer fase.
 
 ## Comandos
@@ -60,6 +61,16 @@ valide com `npm run typecheck` e no navegador (desktop e viewport de celular).
   - Toda falha de armazenamento é tolerada: o jogo segue só na sessão.
 - **Conteúdo desbloqueável** (cores, carimbos, formas, argilas, ferramentas, alças, adornos, músicas,
   decoração) vem de um catálogo único; itens gratuitos do GDD continuam sempre disponíveis.
+
+## Nome do jogo
+
+- O nome oficial é **Cafuné Atelier**, sempre com o "é" (arquivos em UTF-8). Subtítulo:
+  "um ateliê de cerâmica aconchegante" (pt) e "a cozy pottery atelier" (en).
+- Na interface o nome vem do i18n (`home.title1`/`home.title2`); em arquivos e imagens, de
+  `src/app/brand.ts` (`GAME_NAME`, e `GAME_SLUG` sem acento para nomes de arquivo e do pacote npm).
+- Ficam com o nome antigo de propósito: o banco IndexedDB `ceramic-relax` e as chaves antigas do
+  localStorage (mudar apagaria o progresso salvo dos jogadores), a pasta do repositório, o endereço
+  publicado na Vercel e o arquivo `docs/Ceramic Relax — Interface.pdf`.
 
 ## Estilo
 

@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { useGameStore } from '../store/useGameStore'
 import { PALETTE } from '../paint/palette'
 import { BISCUIT } from '../paint/glazeMaterial'
-import { LOOKS, type AnimalId, type Order, type PatternWant, type PieceType } from '../village/animals'
+import { type AnimalId, type Order, type PatternWant, type PieceType } from '../village/animals'
 import { acceptOrder, declineOrder } from '../village/village'
 import { Button } from './Button'
-import { CloseIcon, CoinIcon, StarIcon } from './Icons'
+import { CloseIcon, CoinIcon, GiftIcon, StarIcon } from './Icons'
 import { useIsTouch } from './useIsTouch'
 
 // Vila na interface: cartão do pedido (aceitar / agora não), balões de despedida e de reação,
@@ -15,42 +15,6 @@ import { useIsTouch } from './useIsTouch'
 /** Texto do pedido: os desafios da lojinha têm o próprio texto */
 export function orderTextKey(order: Order) {
   return order.challenge ? `village.challenges.${order.challenge}` : `village.animals.${order.animal}.orders.${order.key}`
-}
-
-/** Rosto do bichinho em SVG (mesmas cores do modelo provisório) */
-export function AnimalAvatar({ id, size = 56 }: { id: AnimalId; size?: number }) {
-  const l = LOOKS[id]
-  return (
-    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
-      {l.extra === 'mane' && <circle cx="32" cy="35" r="28" fill={l.accent} />}
-      {l.ears === 'round' && [16, 48].map((x) => <circle key={x} cx={x} cy="15" r="7" fill={l.accent} />)}
-      {l.ears === 'pointy' && (
-        <path d="M14 22 L18 6 L26 16 Z M50 22 L46 6 L38 16 Z" fill={l.accent} strokeLinejoin="round" />
-      )}
-      {l.ears === 'tall' && <path d="M14 22 L16 0 L28 14 Z M50 22 L48 0 L36 14 Z" fill={l.body} />}
-      <circle cx="32" cy="35" r="22" fill={l.body} />
-      {l.extra === 'mask' && (
-        <>
-          <ellipse cx="23" cy="33" rx="7" ry="5" fill={l.accent} />
-          <ellipse cx="41" cy="33" rx="7" ry="5" fill={l.accent} />
-        </>
-      )}
-      {l.extra === 'shell' && <path d="M14 26 Q32 10 50 26" stroke={l.accent} strokeWidth="4" fill="none" strokeLinecap="round" />}
-      {[24, 40].map((x) => (
-        <g key={x}>
-          <circle cx={x} cy="33" r="3.6" fill="#3B2B26" />
-          <circle cx={x + 1.2} cy="31.6" r="1.1" fill="#fff" />
-        </g>
-      ))}
-      <ellipse cx="17" cy="42" rx="4" ry="2.4" fill="#F4A08E" opacity=".6" />
-      <ellipse cx="47" cy="42" rx="4" ry="2.4" fill="#F4A08E" opacity=".6" />
-      {l.snout === 'blunt' && <ellipse cx="32" cy="44" rx="10" ry="7" fill={l.belly} />}
-      {l.snout === 'small' && <ellipse cx="32" cy="43" rx="5" ry="3.6" fill={l.belly} />}
-      {l.snout === 'beak' && <path d="M26 38 Q44 36 56 50 Q40 50 28 46 Z" fill={l.accent} />}
-      {l.snout === 'long' && <rect x="27" y="38" width="10" height="16" rx="5" fill={l.extra === 'fin' ? l.accent : l.belly} />}
-      <path d="M29 47.5 q3 2 6 0" stroke="#3B2B26" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-    </svg>
-  )
 }
 
 const SHAPES: Record<PieceType | 'any', string> = {
@@ -187,7 +151,6 @@ function OrderCard({ order, actions, onClose }: { order: Order; actions?: ReactN
     <div className="visit-card card" role="dialog" aria-label={t('village.orderLabel', { name })}>
       {onClose && <Button variant="icon" className="visit-card__close" aria-label={t('village.close')} icon={<CloseIcon size={20} />} onClick={onClose} />}
       <div className="visit-card__head">
-        <AnimalAvatar id={order.animal} />
         <div>
           <strong>{name}</strong>
           {order.kind === 'special' && (
@@ -210,12 +173,13 @@ function OrderCard({ order, actions, onClose }: { order: Order; actions?: ReactN
   )
 }
 
-/** Balão curto (despedida ou reação) que some sozinho */
+/** Balão curto (despedida ou reação) que some sozinho, com o nome de quem fala */
 function SpeechBubble({ animal, text, extra }: { animal: AnimalId; text: string; extra?: ReactNode }) {
+  const { t } = useTranslation()
   return (
     <div className="visit-bubble card" role="status">
-      <AnimalAvatar id={animal} size={48} />
       <div>
+        <strong className="visit-bubble__name">{t(`village.animals.${animal}.name`)}</strong>
         <p className="speech">{text}</p>
         {extra}
       </div>
@@ -223,7 +187,7 @@ function SpeechBubble({ animal, text, extra }: { animal: AnimalId; text: string;
   )
 }
 
-/** Botão do pedido no topo (dentro do TopControls): mostra quem pediu e abre o cartão */
+/** Botão do pedido no topo (dentro do TopControls): abre o cartão com o pedido */
 export function OrderChip() {
   const { t } = useTranslation()
   const order = useGameStore((s) => s.village.order)
@@ -239,7 +203,7 @@ export function OrderChip() {
       aria-expanded={open}
       onClick={() => setOrderOpen(!open)}
     >
-      <AnimalAvatar id={order.animal} size={40} />
+      <GiftIcon size={24} />
       {order.kind === 'special' && (
         <span className="order-chip__star">
           <StarIcon size={12} />

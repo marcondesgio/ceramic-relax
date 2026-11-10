@@ -97,6 +97,12 @@
   align-items: flex-start;
   gap: 10px;
 }
+.visit-bubble__name {
+  display: block;
+  font-family: var(--font-title);
+  font-size: 18px;
+  color: var(--text-strong);
+}
 .visit-bubble__coins {
   margin: 8px 0 0;
   font-size: 14px;

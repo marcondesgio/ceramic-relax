@@ -3,21 +3,34 @@
 
 export type PrepStep = 'cut' | 'throw' | 'roll' | 'ready'
 
-/** Mínimo: parede suficiente para a peça. Máximo: cabe no torno e mantém o desempenho. */
-export const AMOUNT_MIN = 0.5
-export const AMOUNT_MAX = 2
+/**
+ * Mínimo: parede suficiente para a peça. Máximo: a bola ainda cabe na cabeça do torno
+ * (raio abaixo de R_MAX) e mantém o desempenho. Faixa larga para a diferença aparecer:
+ * do menor ao maior o volume muda 7,4× e o tamanho da bola quase dobra.
+ */
+export const AMOUNT_MIN = 0.35
+export const AMOUNT_MAX = 2.6
 export const AMOUNT_DEFAULT = 1
 
 /** Referências visuais do fio de corte */
 export const AMOUNT_REFS = [
-  { id: 'S', amount: 0.65 }, // xícara, potinho
+  { id: 'S', amount: 0.55 }, // xícara, potinho
   { id: 'M', amount: 1 }, // caneca, tigela
-  { id: 'L', amount: 1.6 }, // vaso alto
+  { id: 'L', amount: 2.1 }, // vaso alto
 ] as const
 export type AmountRef = (typeof AMOUNT_REFS)[number]['id']
 
 export function clampAmount(a: number) {
   return Math.min(AMOUNT_MAX, Math.max(AMOUNT_MIN, a))
+}
+
+/**
+ * Escala da massa para uma quantidade: a mesma em todo o jogo (porção cortada, massa dos
+ * arremessos, placa do rolo, bola pronta e bola no torno). A quantidade é volume, então o
+ * tamanho cresce pela raiz cúbica.
+ */
+export function amountScale(amount: number) {
+  return Math.cbrt(clampAmount(amount))
 }
 
 /** Referência mais próxima da quantidade escolhida */
@@ -27,13 +40,46 @@ export function nearestRef(amount: number): AmountRef {
   return best.id
 }
 
-/** Bolhas no começo dos arremessos; cada arremesso solta parte delas (cerca de 6 arremessos) */
-export const BUBBLES_START = 12
+/** Gerador pseudoaleatório com semente (mulberry32): a mesma semente desenha a mesma massa */
+export function seededRandom(seed: number) {
+  let a = seed >>> 0
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0
+    let t = a
+    t = Math.imul(t ^ (t >>> 15), t | 1)
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
 
-/** Quantas bolhas um arremesso solta: mais no começo, pelo menos uma */
-export function bubblesReleased(remaining: number, strength: number) {
+export function newSeed() {
+  return Math.floor(Math.random() * 2 ** 31)
+}
+
+/** Arremessos para tirar todas as bolhas: sorteados a cada peça */
+export const THROWS_MIN = 3
+export const THROWS_MAX = 10
+/** Bolhas desenhadas no máximo (a massa nasce com algumas a mais que os arremessos) */
+export const BUBBLES_MAX = 16
+
+/** Sorteio do preparo de uma peça: quantos arremessos, quantas bolhas e a semente da forma */
+export function rollPrep(seed = newSeed()) {
+  const rand = seededRandom(seed)
+  const throwsNeeded = THROWS_MIN + Math.floor(rand() * (THROWS_MAX - THROWS_MIN + 1))
+  const bubbles = Math.min(BUBBLES_MAX, throwsNeeded + 2 + Math.floor(rand() * 5))
+  return { seed, throwsNeeded, bubbles }
+}
+
+/**
+ * Quantas bolhas um arremesso solta: a média que falta, mais com arremesso forte, mas sempre
+ * deixando pelo menos uma para cada arremesso que ainda falta (o total sorteado se cumpre).
+ */
+export function bubblesReleased(remaining: number, throwsLeft: number, strength: number) {
   if (remaining <= 0) return 0
-  return Math.min(remaining, Math.max(1, Math.round(remaining * (0.18 + 0.12 * strength))))
+  if (throwsLeft <= 1) return remaining
+  const avg = remaining / throwsLeft
+  const most = Math.max(1, remaining - (throwsLeft - 1))
+  return Math.min(most, Math.max(1, Math.round(avg * (0.7 + 0.6 * strength))))
 }
 
 /** Dobras para a massa ficar lisa */

@@ -1,10 +1,12 @@
-# Ceramic Relax — Documento de Design do Jogo (GDD)
+# Cafuné Atelier — Documento de Design do Jogo (GDD)
 
 Oct 6, 2026 · @Giovanna
 
 ## Visão geral
 
-Ceramic Relax é um jogo web 3D e relaxante onde o jogador modela um vaso no torno, pinta, leva ao forno e salva a imagem da peça pronta. Roda no navegador, no desktop e no celular, sem instalação e sem cadastro.
+Cafuné Atelier é um jogo web 3D e relaxante onde o jogador prepara a argila, modela no torno, finaliza, pinta e queima peças no forno, atendendo os pedidos dos bichinhos de uma vilinha brasileira, e salva a imagem das peças prontas. Roda no navegador, no desktop e no celular, sem instalação e sem cadastro.
+
+**Sobre o nome:** cafuné é a palavra brasileira para o carinho de passar os dedos no cabelo de alguém, famosa no mundo por não ter tradução. Assim como modelar uma peça, é um carinho feito com as mãos. "Atelier" é entendido em português e em inglês, então o nome é o mesmo nos dois idiomas. Subtítulos: "um ateliê de cerâmica aconchegante" / "a cozy pottery atelier".
 
 **Pilares**
 
@@ -63,13 +65,13 @@ Antes do torno, o jogador prepara a argila na bancada: escolhe a quantidade, arr
 
 - O jogador "joga" a argila contra a bancada várias vezes; cada arremesso faz um "ploft" e libera bolhinhas que estouram na superfície.
 - Um sinal visual mostra o progresso: as bolhinhas vão diminuindo até sumir.
-- Cerca de 5 a 8 arremessos bastam.
+- A quantidade de arremessos é sorteada a cada peça, de 3 a 10, e as bolhas aparecem em lugares diferentes na massa, para cada preparo ser um pouco diferente.
 
 **3. Rolo e dobras (alisar)**
 
 - O jogador passa o rolo para frente e para trás, achatando a massa.
 - Depois dobra a massa ao meio e repete, de 2 a 3 vezes, até a argila ficar lisa e uniforme.
-- Ao terminar, a massa vira uma bola lisinha e brilhante, que o jogador leva ao torno.
+- Ao terminar, a massa vira uma bola lisinha e brilhante, mas nunca perfeitamente redonda: cada preparo sai com irregularidades suaves sorteadas (mais alta ou mais baixinha, com barriguinhas e cinturas), sempre com a quantidade escolhida. É essa mesma forma que chega ao torno, então cada peça começa diferente.
 
 **Consequências suaves**
 
@@ -206,7 +208,7 @@ Uma peça que passou da fase de modelagem ou acabamento com fissuras nunca quebr
 
 - A peça fica em uma prateleira, girando devagar, com fundo do ateliê desfocado.
 - O jogador pode girar a peça com o mouse ou dedo para escolher o melhor ângulo.
-- "Salvar imagem" gera um PNG 1080 x 1350 (formato bom para redes sociais) com moldura suave e o logo "Ceramic Relax" pequeno no canto.
+- "Salvar imagem" gera um PNG 1080 x 1350 (formato bom para redes sociais) com moldura suave e o logo "Cafuné Atelier" pequeno no canto.
 - No celular, usa o compartilhamento nativo (Web Share API) quando disponível; senão, baixa o arquivo.
 
 ## Vila dos bichinhos
@@ -229,7 +231,7 @@ O jogador é a ceramista de uma vilinha de animais brasileiros, que batem à por
 1. Ouve-se um toc-toc e a porta do ateliê se abre: o bichinho entra e para ao lado do torno.
 2. Um balão de fala mostra o pedido com texto curto e um desenho simples (ex.: uma caneca azul).
 3. O jogador aceita e faz a peça normalmente: modelagem, pintura e forno.
-4. Na tela de resultado, aparece o botão "Entregar para \[nome\]". O bichinho reage à peça, agradece e entrega as moedinhas.
+4. Na tela de resultado, aparece o botão "Entregar para \[nome\]". O bichinho vem até a mesinha, reage à peça, agradece e entrega as moedinhas. Depois guarda a peça numa sacolinha de papel e vai embora levando a peça (com "reduzir animações", a peça some num brilhinho e ele sai com a sacolinha). A partir daí o resultado mostra "\[nome\] levou a peça para casa", "Salvar imagem" (a foto ainda mostra a peça na mesinha, como lembrança) e "Fazer outra peça"; o kintsugi fica para antes da entrega.
 5. Depois de alguns segundos, o próximo bichinho bate à porta.
 
 **Regras de convivência com o modo livre**
@@ -477,12 +479,12 @@ São três prompts: um para a interface completa (Claude Design, Figma AI ou sim
 **Prompt 1 — Interface e telas (UI/UX)**
 
 ```
-Crie o design de interface do jogo web "Ceramic Relax", um jogo 3D relaxante e fofo de modelagem de cerâmica, no estilo pastel aconchegante de Animal Crossing.
+Crie o design de interface do jogo web "Cafuné Atelier", um jogo 3D relaxante e fofo de modelagem de cerâmica, no estilo pastel aconchegante de Animal Crossing.
 
 Contexto: o jogador molda argila em um torno (segurando SPACE no desktop ou um pedal virtual no celular), pinta a peça, escolhe acabamento brilhante ou fosco, leva ao forno e salva uma imagem da peça final. Sem pontuação, sem tempo, sem falha.
 
 Crie as telas em duas versões, desktop (1440x900) e celular retrato (390x844):
-1. Tela inicial: ateliê ao fundo, logo "Ceramic Relax", botão Começar, seletor PT/EN, ícone de som.
+1. Tela inicial: ateliê ao fundo, logo "Cafuné Atelier", botão Começar, seletor PT/EN, ícone de som.
 2. Modelagem: peça no centro, indicador de velocidade do torno, botões Desfazer, Mais argila, Esponja, Formas iniciais e "Pronto, vamos pintar!". No celular, pedal virtual no canto inferior direito com 3 níveis de velocidade.
 3. Pintura: barra de ferramentas (Pincel P/M/G, Faixas, Carimbos, Balde, Borracha), paleta de 12 cores pastel, alternância Fora/Dentro, botão "Levar ao forno".
 4. Escolha do forno: dois cartões grandes, Brilhante e Fosco, com prévia.
@@ -519,7 +521,7 @@ O código deve ser construído em etapas, não de uma vez: um prompt principal d
 **Prompt principal (contexto + etapa 1)**
 
 ```
-Você vai me ajudar a construir "Ceramic Relax", um jogo web 3D relaxante e fofo de modelagem de cerâmica que roda no navegador, no desktop e no celular.
+Você vai me ajudar a construir "Cafuné Atelier", um jogo web 3D relaxante e fofo de modelagem de cerâmica que roda no navegador, no desktop e no celular.
 
 STACK: React + TypeScript + Vite, three, @react-three/fiber, @react-three/drei, @react-three/postprocessing, zustand, @react-spring/three, howler, i18next/react-i18next. Sem backend; deve ser publicável como site estático.
 

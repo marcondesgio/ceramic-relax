@@ -20,7 +20,13 @@ export function ResultHUD() {
   const restoreKintsugi = useGameStore((s) => s.restoreKintsugi)
   // pedido de um bichinho: qualquer peça pode ser entregue (só a reação muda)
   const order = useGameStore((s) => s.village.order)
-  const delivered = useGameStore((s) => s.deliveredTo !== null)
+  const deliveredTo = useGameStore((s) => s.deliveredTo)
+  const delivered = deliveredTo !== null
+  // o bichinho já guardou a peça na sacolinha: fora da entrega em andamento, a peça já foi
+  // (mesmo que outro bichinho bata à porta com o resultado ainda aberto)
+  const taken = useGameStore(
+    (s) => s.deliveredTo !== null && !(s.visit && (s.visit.stage === 'delivering' || s.visit.stage === 'reacting')),
+  )
   const setShopOpen = useGameStore((s) => s.setShopOpen)
   const [saving, setSaving] = useState(false)
 
@@ -69,10 +75,17 @@ export function ResultHUD() {
         )}
       </div>
       <div className="result-hud__bottom">
-        <div className="hint">
-          <RotateIcon size={18} />
-          {touch ? t('result.dragShort') : t('result.drag')}
-        </div>
+        {taken && deliveredTo ? (
+          <div className="hint">
+            <GiftIcon size={18} />
+            {t('village.tookPiece', { name: t(`village.animals.${deliveredTo}.name`) })}
+          </div>
+        ) : (
+          <div className="hint">
+            <RotateIcon size={18} />
+            {touch ? t('result.dragShort') : t('result.drag')}
+          </div>
+        )}
         {order && !delivered && (
           <div className="result-hud__deliver">
             <Button variant="primary" icon={<GiftIcon />} onClick={deliverOrder}>
@@ -81,7 +94,7 @@ export function ResultHUD() {
           </div>
         )}
         {/* gratuito e sempre disponível: a peça "com defeito" vira conquista. Pode ficar para depois. */}
-        {crackle && !crackle.kintsugi && (
+        {crackle && !crackle.kintsugi && !taken && (
           <div className="result-hud__kintsugi">
             <Button className="btn--gold" icon={<SparkleIcon />} onClick={restoreKintsugi}>
               {t('result.kintsugi')}
@@ -90,6 +103,7 @@ export function ResultHUD() {
           </div>
         )}
         <div className="result-hud__actions">
+          {/* a foto continua depois da entrega: a peça volta à mesinha só durante a foto */}
           <Button variant="primary" icon={<DownloadIcon />} onClick={save} disabled={saving}>
             {saving ? t('result.saving') : t('result.save')}
           </Button>

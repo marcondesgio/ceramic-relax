@@ -1,18 +1,19 @@
 import { Component, Suspense, useEffect, useMemo, type ReactNode } from 'react'
 import { useGLTF } from '@react-three/drei'
 import type { Mesh, Object3D } from 'three'
+import { GAME_NAME } from '../app/brand'
 import { useGameStore } from '../store/useGameStore'
-import { MODEL_FILES, modelUrl } from './models'
+import { DRACO_PATH, MODEL_FILES, modelUrl } from './models'
 import { PlaceholderAtelier } from './PlaceholderAtelier'
 
 /** Se o GLB falhar (arquivo faltando, corrompido), mostra o ateliê provisório */
-class ModelBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
+export class ModelBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
   state = { failed: false }
   static getDerivedStateFromError() {
     return { failed: true }
   }
   componentDidCatch(error: unknown) {
-    console.warn('[Ceramic Relax] não foi possível carregar o modelo do ateliê:', error)
+    console.warn(`[${GAME_NAME}] não foi possível carregar o modelo do ateliê:`, error)
   }
   render() {
     return this.state.failed ? this.props.fallback : this.props.children
@@ -21,7 +22,7 @@ class ModelBoundary extends Component<{ fallback: ReactNode; children: ReactNode
 
 /** Ateliê final em GLB, preparado para desempenho (estático, sombras baked) */
 function GlbAtelier({ url }: { url: string }) {
-  const { scene } = useGLTF(url)
+  const { scene } = useGLTF(url, DRACO_PATH)
   const quality = useGameStore((s) => s.quality)
 
   const prepared = useMemo(() => {
@@ -64,4 +65,4 @@ export function Atelier() {
 }
 
 // começa a baixar o modelo junto com o app
-if (MODEL_FILES.atelier) useGLTF.preload(modelUrl(MODEL_FILES.atelier))
+if (MODEL_FILES.atelier) useGLTF.preload(modelUrl(MODEL_FILES.atelier), DRACO_PATH)

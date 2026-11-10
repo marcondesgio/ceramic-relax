@@ -23,9 +23,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
+  /* reserva o espaço dos botões do topo (menu, som), para o título nunca ficar por baixo deles */
+  padding: calc(var(--gap) + var(--safe-top) + 64px) 16px 16px;
   /* sobe um pouco para deixar o torno aparecendo embaixo */
-  transform: translateY(-6vh);
+  transform: translateY(-4vh);
 }
 .home__card {
   display: flex;
@@ -42,7 +43,8 @@
   flex-direction: column;
   font-family: var(--font-title);
   font-weight: 800;
-  font-size: clamp(56px, 9vw, 84px);
+  /* cresce com a menor dimensão da tela: não estoura em celular nem em janela baixa */
+  font-size: clamp(38px, min(8.5vw, 8.5vh), 76px);
   line-height: 0.95;
   color: var(--text);
 }
@@ -59,6 +61,48 @@
   min-width: 240px;
   font-size: 24px;
   min-height: 64px;
+}
+/* Começar em verde bebê: destaca do resto (tudo em tons de argila) sem perder a calma */
+.btn--primary.home__start {
+  --base: #8fbf9c;
+  background: #bfe6c8;
+}
+/* telas baixas (celular deitado, janela pequena): cartão mais compacto */
+@media (max-height: 640px) {
+  .home__card {
+    padding: 16px 28px 36px;
+  }
+  .home__card svg {
+    width: 44px;
+    height: 50px;
+  }
+  .home__tagline {
+    margin-top: 4px;
+  }
+  .home__note {
+    display: none;
+  }
+}
+/* celular deitado: título numa linha só, sem o vasinho, para caber abaixo dos botões do topo */
+@media (max-height: 480px) {
+  .home__center {
+    transform: none;
+  }
+  .home__card {
+    padding: 12px 24px 34px;
+  }
+  .home__card svg {
+    display: none;
+  }
+  .logo {
+    flex-direction: row;
+    gap: 0.25em;
+    font-size: 36px;
+  }
+  .home__start {
+    min-height: 56px;
+    font-size: 21px;
+  }
 }
 .home__note {
   margin: 18px 0 0;

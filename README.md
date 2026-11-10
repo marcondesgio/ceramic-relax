@@ -1,4 +1,6 @@
-# Ceramic Relax
+# Cafuné Atelier
+
+*Um ateliê de cerâmica aconchegante · a cozy pottery atelier*
 
 Jogo web 3D relaxante de modelagem de cerâmica (React + React Three Fiber). Design em `docs/`.
 
@@ -30,7 +32,8 @@ src/
             de controle), PieceHandles (alças na peça), FinishingController (gestos)
   village/  vila dos bichinhos: animals.ts (elenco, pedidos, visual), traits.ts (leitura da peça),
             village.ts (fila, aceitar, recusar, entregar), VillageController (etapas da visita),
-            VillageScene + AnimalModel (porta e bichinhos provisórios)
+            VillageScene (porta e visita), CharacterModel (modelo final em GLB, com volta para o
+            provisório), AnimalModel (bichinhos provisórios de formas simples)
   shop/     catalog.ts (50 itens, preços, desafios, "em breve"), unlocks.ts (o que cada compra libera),
             items.ts (ids usados pelo jogo)
   wheel/    física do torno, SPACE, malha do torno
@@ -60,6 +63,12 @@ src/
 - [x] Etapa D — acabamento parte 1 (ripador horizontal e alças pré-moldadas)
 - [x] Etapa E — vila dos bichinhos (7 personagens provisórios, pedidos, reações e moedinhas)
 - [x] Etapa F — lojinha e desafios (cores, carimbos, ripado vertical, furos, alças, argila preparada)
+- [x] Etapa G — nome Cafuné Atelier
+- [x] Etapa H — modelos finais dos bichinhos: Capi, Soneca, Tatá, Tuco, Rosinha e Guará prontos;
+      a Mica saiu do elenco por enquanto (volta quando tiver o OBJ)
+- [ ] Ajustes da rodada de testes: [x] tela inicial e cores da lojinha · [x] quantidade de argila
+      proporcional do corte ao torno · [x] bolhas e argila irregular · [x] rolo, esponja e balde ·
+      [x] bichinho leva a peça
 
 ## Trocar sons e cenário por arquivos
 
@@ -68,3 +77,9 @@ src/
 - **Ateliê em GLB:** coloque o arquivo em `public/models/` e preencha `src/scene/models.ts`
   (lá estão as convenções: escala, áreas livres, sombras `_cast`). Se o arquivo faltar ou falhar,
   o jogo volta sozinho para o ateliê provisório.
+- **Bichinhos:** os originais (OBJ + texturas) ficam em `docs/characters/<id>/`, fora do git (OBJ de ~100 MB,
+  acima do limite do GitHub; ver `.gitignore`). O GLB do jogo (`public/models/characters/<id>.glb`, 200 a 330 KB)
+  é gerado no Blender por `tools/blender/process_character.py` (uso no cabeçalho do script): malha reduzida (de ~1,5 mi para
+  poucas dezenas de milhares de triângulos), pés em y = 0, altura 1, olhando para +z, braços abaixados da pose em T, texturas
+  1024 px em JPEG e compressão Draco (decodificador em `public/draco/`). Depois é só preencher
+  `CHARACTER_FILES` em `src/scene/models.ts`; sem arquivo, o bichinho provisório continua.

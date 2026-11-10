@@ -106,6 +106,12 @@
   filter: brightness(0);
   opacity: 0.22;
 }
+/* cores são a exceção: a amostra aparece de verdade (só um pouco apagada) para dar para escolher */
+.is-locked .shop-item__icon--color,
+.shop-detail.is-locked .shop-item__icon--color {
+  filter: saturate(0.85);
+  opacity: 0.85;
+}
 .shop-item.is-soon {
   opacity: 0.7;
 }
@@ -131,13 +137,18 @@
   font-size: 14px;
   color: #8a5e17;
 }
-/* bichinho cujo desafio o item libera */
+/* item que libera o desafio de um bichinho: estrelinha no canto (o nome aparece no detalhe) */
 .shop-item__animal {
   position: absolute;
   top: 6px;
   right: 6px;
-  width: 28px;
-  height: 28px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #f0c868;
+  color: #5a3d12;
 }
 .shop-item__done {
   position: absolute;
@@ -184,6 +195,10 @@
   margin-top: 4px;
   font-weight: 800;
   color: var(--text);
+}
+.shop-detail__challenge svg {
+  flex: none;
+  color: #d9a93a;
 }
 .shop-detail__action .btn {
   white-space: nowrap;

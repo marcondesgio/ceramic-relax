@@ -62,11 +62,11 @@ function impact(strength: number) {
   rt.squashV = 0
   playEffect('squish', { rate: 0.72 + Math.random() * 0.1, volume: 0.8 + strength * 0.4 })
   haptic('tap')
-  const remaining = s.prep.bubbles
-  const n = bubblesReleased(remaining, strength)
+  const { bubbles: remaining, throws, throwsNeeded } = s.prep
+  const n = bubblesReleased(remaining, throwsNeeded - throws, strength)
   if (!n) return
   for (let i = remaining - n; i < remaining; i++) rt.pops.set(i, 0)
-  s.updatePrep({ bubbles: remaining - n })
+  s.updatePrep({ bubbles: remaining - n, throws: throws + 1 })
   // as bolhinhas estouram uma depois da outra
   for (let k = 0; k < Math.min(n, 4); k++) {
     window.setTimeout(() => playEffect('pop', { rate: 1.5 + Math.random() * 0.5, volume: 0.35 }), 60 + k * 70)

@@ -20,10 +20,10 @@ import {
   MusicIcon,
   ShopIcon,
   SparkleIcon,
+  StarIcon,
   VaseIcon,
 } from './Icons'
 import { StampPreview } from './PaintTools'
-import { AnimalAvatar } from './VillageHUD'
 import { useIsTouch } from './useIsTouch'
 
 // Lojinha do ateliê: todos os itens desde o começo, os bloqueados em silhueta.
@@ -68,7 +68,8 @@ function ItemIcon({ item, size = 40 }: { item: ShopItem; size?: number }) {
     default:
       icon = <SparkleIcon size={size} />
   }
-  return <span className="shop-item__icon">{icon}</span>
+  const cls = item.category === 'colors' ? 'shop-item__icon shop-item__icon--color' : 'shop-item__icon'
+  return <span className={cls}>{icon}</span>
 }
 
 function Price({ value }: { value: number }) {
@@ -89,7 +90,7 @@ function ItemCard({ item, onSelect, selected }: { item: ShopItem; onSelect: () =
     <button type="button" className={`shop-item ${state}${selected ? ' is-selected' : ''}`} aria-pressed={selected} onClick={onSelect}>
       {item.challenge && (
         <span className="shop-item__animal" title={t(`village.animals.${item.challenge}.name`)}>
-          <AnimalAvatar id={item.challenge} size={28} />
+          <StarIcon size={16} />
           {done && (
             <span className="shop-item__done">
               <CheckIcon size={12} />
@@ -142,7 +143,7 @@ function ItemDetail({ item }: { item: ShopItem }) {
         <span>{t(`shop.desc.${item.category}`)}</span>
         {item.challenge && (
           <span className="shop-detail__challenge">
-            <AnimalAvatar id={item.challenge} size={24} />
+            <StarIcon size={16} />
             {done ? t('shop.challengeDone', { name: animalName }) : t('shop.challenge', { name: animalName })}
           </span>
         )}

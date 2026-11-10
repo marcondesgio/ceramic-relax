@@ -249,6 +249,25 @@
   padding: 4px 14px 4px 4px;
   gap: 8px;
 }
+/* celular estreito com o botão do pedido no topo: o indicador do torno guarda a palavra
+   (as barrinhas continuam mostrando a velocidade; o leitor de tela lê o rótulo inteiro) */
+@media (max-width: 420px) {
+  .hud--touch .hud__top:has(.order-chip) .wheel-ind--compact {
+    padding-right: 10px;
+  }
+  .hud--touch .hud__top:has(.order-chip) .wheel-ind--compact strong {
+    display: none;
+  }
+}
+/* bem estreito (até ~350 px): fica só o ícone do torno; a velocidade aparece no pedal */
+@media (max-width: 350px) {
+  .hud--touch .hud__top:has(.order-chip) .wheel-ind--compact {
+    padding-right: 4px;
+  }
+  .hud--touch .hud__top:has(.order-chip) .wheel-ind--compact .wheel-bars {
+    display: none;
+  }
+}
 .hud--touch .wheel-ind--compact .wheel-ind__icon {
   flex: none;
   width: 36px;

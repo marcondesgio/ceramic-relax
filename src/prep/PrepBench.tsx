@@ -1,16 +1,16 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { RoundedBox } from '@react-three/drei'
-import { MeshStandardMaterial, type Group, type Mesh } from 'three'
+import { LatheGeometry, MeshStandardMaterial, Vector2, type Group, type Mesh } from 'three'
 import { useGameStore } from '../store/useGameStore'
 import { SHELF_TOP } from '../kiln/kilnLayout'
-import { AMOUNT_REFS, nearestRef } from './prep'
+import { AMOUNT_REFS, BUBBLES_MAX, nearestRef, seededRandom } from './prep'
+import { BALL_R, PROFILE_SAMPLES, createBallProfile } from '../pottery/profile'
 import {
   BLOCK_D,
   BLOCK_H,
   BLOCK_LEN,
   BLOCK_X0,
-  BUBBLE_COUNT,
   CUT_DOWN,
   CUT_TIME,
   FOLD_TIME,
@@ -30,18 +30,96 @@ import {
 
 const CLAY = '#E3A587'
 const WOOD = '#E8C39A'
-const WOOD_DARK = '#D9AE82'
 const WIRE = '#9A93A6'
+// rolo esmaltado no mesmo azul e creme do forninho
+const PIN_BLUE = '#B9DDF2'
+const PIN_BLUE_DARK = '#8DB4D2'
+const PIN_TRIM = '#FBE3A0'
+const PIN_LEN = 0.9
 
-/** Direções das bolhas na metade de cima e de frente da massa (sempre as mesmas) */
-const BUBBLE_DIRS = Array.from({ length: BUBBLE_COUNT }, (_, i) => {
-  const f = (i + 0.5) / BUBBLE_COUNT
-  const y = 0.22 + 0.68 * ((i * 0.618) % 1)
-  const th = -1.25 + 2.5 * f
-  const r = Math.sqrt(1 - y * y)
-  return [Math.sin(th) * r, y, Math.cos(th) * r] as const
-})
-const BUBBLE_SIZES = BUBBLE_DIRS.map((_, i) => 0.026 + ((i * 7) % 5) * 0.004)
+type PinMats = Record<'pinBody' | 'pinTrim' | 'pinDark', MeshStandardMaterial>
+
+/**
+ * Rolo de massa: corpo azul com as pontas arredondadas, dois frisos creme, eixo e cabos
+ * torneados com bolinha na ponta. Deitado no eixo X; gira em volta dele.
+ */
+function RollingPin({ mats }: { mats: PinMats }) {
+  const half = PIN_LEN / 2
+  // cabo torneado (perfil de revolução): gargalo, barriga e bolinha na ponta
+  const handle = useMemo(() => {
+    const pts = [
+      [0, 0], [0.026, 0], [0.024, 0.02], [0.028, 0.05], [0.036, 0.09], [0.038, 0.12],
+      [0.033, 0.15], [0.026, 0.165], [0.034, 0.18], [0.036, 0.195], [0.03, 0.212], [0, 0.218],
+    ].map(([x, y]) => new Vector2(x, y))
+    const g = new LatheGeometry(pts, 20)
+    g.computeVertexNormals()
+    return g
+  }, [])
+  useEffect(() => () => handle.dispose(), [handle])
+  return (
+    <group rotation={[0, 0, Math.PI / 2]}>
+      {/* corpo: cápsula com as pontas arredondadas (sem quinas) */}
+      <mesh material={mats.pinBody} castShadow>
+        <capsuleGeometry args={[PIN_R, PIN_LEN - PIN_R * 2, 8, 28]} />
+      </mesh>
+      {/* frisos creme perto das pontas */}
+      {[-1, 1].map((side) => (
+        <mesh key={side} position-y={side * (half - 0.11)} rotation-x={Math.PI / 2} material={mats.pinTrim}>
+          <torusGeometry args={[PIN_R + 0.002, 0.009, 8, 32]} />
+        </mesh>
+      ))}
+      {/* faixa central, bem fininha */}
+      <mesh rotation-x={Math.PI / 2} material={mats.pinTrim}>
+        <torusGeometry args={[PIN_R + 0.001, 0.005, 6, 32]} />
+      </mesh>
+      {/* tampinhas e cabos */}
+      {[-1, 1].map((side) => (
+        <group key={side} position-y={side * (half - 0.006)} rotation-z={side > 0 ? 0 : Math.PI}>
+          <mesh material={mats.pinDark} castShadow>
+            <cylinderGeometry args={[0.034, 0.042, 0.03, 16]} />
+          </mesh>
+          <mesh position-y={0.012} geometry={handle} material={mats.pinTrim} castShadow />
+        </group>
+      ))}
+    </group>
+  )
+}
+
+/**
+ * Bolhas sorteadas pela semente da peça: espalhadas na metade de cima e de frente da massa,
+ * sem encostar umas nas outras. Cada peça tem as bolhas num lugar diferente.
+ */
+function bubbleLayout(seed: number) {
+  const rand = seededRandom(seed ^ 0x5bd1e995)
+  const dirs: [number, number, number][] = []
+  const sizes: number[] = []
+  for (let tries = 0; dirs.length < BUBBLES_MAX && tries < 400; tries++) {
+    const y = 0.12 + 0.8 * rand()
+    const th = -1.45 + 2.9 * rand()
+    const r = Math.sqrt(1 - y * y)
+    const d: [number, number, number] = [Math.sin(th) * r, y, Math.cos(th) * r]
+    if (dirs.some((o) => Math.hypot(o[0] - d[0], o[1] - d[1], o[2] - d[2]) < 0.34)) continue
+    dirs.push(d)
+    sizes.push(0.022 + rand() * 0.02)
+  }
+  // se faltar espaço (muito raro), repete posições já sorteadas
+  while (dirs.length < BUBBLES_MAX) {
+    dirs.push(dirs[dirs.length % Math.max(1, dirs.length)] ?? [0, 1, 0])
+    sizes.push(0.024)
+  }
+  return { dirs, sizes }
+}
+
+/** Bola pronta na bancada: a mesma forma (irregular) que vai chegar ao torno, em miniatura */
+function readyBallGeometry(seed: number) {
+  const p = createBallProfile(1, seed)
+  const pts = [new Vector2(0, 0)]
+  for (let i = 0; i < PROFILE_SAMPLES; i++) pts.push(new Vector2(p.radii[i], (p.height * i) / (PROFILE_SAMPLES - 1)))
+  pts.push(new Vector2(0, p.height))
+  const g = new LatheGeometry(pts, 40)
+  g.computeVertexNormals()
+  return g
+}
 
 /** Marcas P, M e G na beirada da mesa; a mais perto da escolha fica destacada */
 function RefTicks() {
@@ -73,14 +151,21 @@ export function PrepBench() {
       slab: new MeshStandardMaterial({ color: CLAY, roughness: 0.75, metalness: 0 }),
       shiny: new MeshStandardMaterial({ color: '#E9A98A', roughness: 0.22, metalness: 0 }),
       wood: new MeshStandardMaterial({ color: WOOD, roughness: 0.7 }),
-      woodDark: new MeshStandardMaterial({ color: WOOD_DARK, roughness: 0.7 }),
+      pinBody: new MeshStandardMaterial({ color: PIN_BLUE, roughness: 0.35, metalness: 0 }),
+      pinTrim: new MeshStandardMaterial({ color: PIN_TRIM, roughness: 0.45, metalness: 0 }),
+      pinDark: new MeshStandardMaterial({ color: PIN_BLUE_DARK, roughness: 0.4, metalness: 0 }),
       wire: new MeshStandardMaterial({ color: WIRE, roughness: 0.35, metalness: 0.4 }),
-      bubbles: BUBBLE_DIRS.map(
+      bubbles: Array.from(
+        { length: BUBBLES_MAX },
         () => new MeshStandardMaterial({ color: '#FFF6EE', roughness: 0.15, transparent: true, opacity: 0.8 }),
       ),
     }),
     [],
   )
+  const seed = useGameStore((s) => s.prep.seed)
+  const layout = useMemo(() => bubbleLayout(seed), [seed])
+  const ballGeo = useMemo(() => readyBallGeometry(seed), [seed])
+  useEffect(() => () => ballGeo.dispose(), [ballGeo])
 
   const cut = useRef<Group>(null)
   const portion = useRef<Mesh>(null)
@@ -138,7 +223,7 @@ export function PrepBench() {
       const spread = 1 + (1 - sq) * 0.6
       lump.current.position.y = LUMP_R * 0.8 * sq * m + rt.lumpY
       lump.current.scale.set(spread * m, 0.8 * sq * m, spread * m)
-      for (let i = 0; i < BUBBLE_COUNT; i++) {
+      for (let i = 0; i < BUBBLES_MAX; i++) {
         const b = bubbles.current[i]
         if (!b) continue
         const pop = rt.pops.get(i)
@@ -215,7 +300,7 @@ export function PrepBench() {
       <group ref={throwGroup}>
         <mesh ref={lump} material={mats.clay} castShadow receiveShadow>
           <sphereGeometry args={[LUMP_R, 32, 24]} />
-          {BUBBLE_DIRS.map((d, i) => (
+          {layout.dirs.map((d, i) => (
             <mesh
               key={i}
               ref={(el) => {
@@ -224,7 +309,7 @@ export function PrepBench() {
               position={[d[0] * LUMP_R * 0.98, d[1] * LUMP_R * 0.98, d[2] * LUMP_R * 0.98]}
               material={mats.bubbles[i]}
             >
-              <sphereGeometry args={[BUBBLE_SIZES[i], 12, 10]} />
+              <sphereGeometry args={[layout.sizes[i], 12, 10]} />
             </mesh>
           ))}
         </mesh>
@@ -239,22 +324,14 @@ export function PrepBench() {
           </group>
         </group>
         <group ref={pin}>
-          <mesh rotation={[0, 0, Math.PI / 2]} material={mats.wood} castShadow>
-            <cylinderGeometry args={[PIN_R, PIN_R, 0.78, 20]} />
-          </mesh>
-          {[-1, 1].map((side) => (
-            <mesh key={side} position={[side * 0.47, 0, 0]} rotation={[0, 0, Math.PI / 2]} material={mats.woodDark} castShadow>
-              <cylinderGeometry args={[0.026, 0.03, 0.16, 12]} />
-            </mesh>
-          ))}
+          <RollingPin mats={mats} />
         </group>
       </group>
 
       {/* pronta para o torno */}
       <group ref={ball}>
-        <mesh position-y={LUMP_R} material={mats.shiny} castShadow receiveShadow>
-          <sphereGeometry args={[LUMP_R, 40, 28]} />
-        </mesh>
+        {/* perfil do torno em miniatura: o raio da bola padrão vira o raio da massa */}
+        <mesh geometry={ballGeo} scale={LUMP_R / BALL_R} material={mats.shiny} castShadow receiveShadow />
       </group>
     </group>
   )

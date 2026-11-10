@@ -6,7 +6,11 @@ import type { StampId } from '../paint/stamps'
 
 export type AnimalId = 'capi' | 'soneca' | 'tuco' | 'mica' | 'tata' | 'rosinha' | 'guara'
 
-export const ANIMALS: AnimalId[] = ['capi', 'soneca', 'tuco', 'mica', 'tata', 'rosinha', 'guara']
+/**
+ * Elenco que visita o ateliê. A Mica está fora por enquanto (aguarda o modelo final): os dados
+ * dela (pedidos, visual, textos) continuam aqui para voltar só incluindo o id nesta lista.
+ */
+export const ANIMALS: AnimalId[] = ['capi', 'soneca', 'tuco', 'tata', 'rosinha', 'guara']
 
 /** Primeira sessão: ordem fixa para apresentar os personagens */
 export const FIRST_VISITS: AnimalId[] = ['capi', 'tata', 'tuco']
@@ -118,6 +122,21 @@ export const LOOKS: Record<AnimalId, AnimalLook> = {
   guara: { body: '#E07A47', belly: '#F6C7A4', accent: '#4A3A35', height: 1.15, ears: 'tall', snout: 'long', extra: 'tail', legs: 'long' },
 }
 
+/**
+ * Sacolinha da entrega: a mão que segura (no modelo de altura 1, olhando para +z; x < 0 é a mão
+ * que aparece à esquerda na tela, longe da mesinha) e a cor do papel. Medido nas prévias de frente
+ * dos modelos finais.
+ */
+export const BAGS: Record<AnimalId, { hand: [number, number, number]; color: string }> = {
+  capi: { hand: [-0.34, 0.33, 0.05], color: '#D9D2F0' },
+  soneca: { hand: [-0.36, 0.22, 0.05], color: '#C9DDC4' },
+  tuco: { hand: [-0.31, 0.19, 0.04], color: '#FFD9C0' },
+  mica: { hand: [-0.3, 0.35, 0.05], color: '#FFD9C0' },
+  tata: { hand: [-0.46, 0.53, 0.04], color: '#FBE3A0' },
+  rosinha: { hand: [-0.28, 0.3, 0.06], color: '#C8E3F2' },
+  guara: { hand: [-0.27, 0.35, 0.05], color: '#C9DDC4' },
+}
+
 // paleta extra (lojinha): 12 dourado · 13 verde-água · 14 vinho · 15 azul-noite · 16 mostarda · 17 rosa antigo
 
 /**
@@ -125,7 +144,7 @@ export const LOOKS: Record<AnimalId, AnimalLook> = {
  * Texto em village.challenges.<id do item>. Valem 25 moedinhas, como todo especial.
  */
 export const CHALLENGES: Record<string, { animal: AnimalId; wants: OrderWants }> = {
-  'color-gold': { animal: 'mica', wants: { types: ['pot'], colors: [12] } },
+  'color-gold': { animal: 'rosinha', wants: { types: ['pot'], colors: [12] } },
   'color-aqua': { animal: 'rosinha', wants: { colors: [13] } },
   'color-wine': { animal: 'guara', wants: { types: ['tallVase', 'vase'], colors: [14] } },
   'color-navy': { animal: 'soneca', wants: { types: ['vase', 'pot'], colors: [15] } },
@@ -138,7 +157,7 @@ export const CHALLENGES: Record<string, { animal: AnimalId; wants: OrderWants }>
   'stamp-cloud': { animal: 'soneca', wants: { colors: [7, 8], pattern: 'cloud' } },
   'stamp-mushroom': { animal: 'capi', wants: { types: ['mug'], pattern: 'mushroom' } },
   'stamp-cactus': { animal: 'guara', wants: { types: ['pot', 'vase'], pattern: 'cactus' } },
-  'stamp-butterfly': { animal: 'mica', wants: { types: ['pot'], pattern: 'butterfly' } },
+  'stamp-butterfly': { animal: 'tata', wants: { types: ['pot'], pattern: 'butterfly' } },
   'stamp-sun': { animal: 'tuco', wants: { colors: [4, 16], pattern: 'sun' } },
   'stamp-cherry': { animal: 'capi', wants: { types: ['bowl'], pattern: 'cherry' } },
   'tool-flute': { animal: 'guara', wants: { types: ['tallVase'], fluting: true } },

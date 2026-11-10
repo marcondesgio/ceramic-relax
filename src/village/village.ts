@@ -104,7 +104,7 @@ export function declineOrder() {
   s.setNextKnock(Date.now() + randBetween(35_000, 50_000))
 }
 
-/** Entregar a peça pronta: o bichinho vem até a mesinha, reage e paga as moedinhas */
+/** Entregar a peça pronta: o bichinho vem até a mesinha, reage, paga as moedinhas e leva a peça */
 export function deliverOrder() {
   const s = useGameStore.getState()
   const order = s.village.order
@@ -123,6 +123,7 @@ export function deliverOrder() {
   s.setOrderOpen(false)
   s.setVisit({ animal: order.animal, order, stage: 'delivering', level })
   villageRuntime.stageT = 0
+  villageRuntime.take = -1
   walk(ROUTES.toShelf)
 }
 
@@ -131,6 +132,11 @@ export function restoreVisit() {
   const s = useGameStore.getState()
   const order = s.village.order
   if (!order || s.visit) return
+  // pedido de um bichinho que saiu do elenco (save antigo): some sem cobrança nenhuma
+  if (!ANIMALS.includes(order.animal)) {
+    s.setVillage({ order: null })
+    return
+  }
   s.setVisit({ animal: order.animal, order, stage: 'waiting' })
   placeAt(SPOTS.wait)
 }

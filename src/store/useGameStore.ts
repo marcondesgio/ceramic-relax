@@ -15,7 +15,7 @@ import type { BrushSize } from '../paint/palette'
 import type { StampId } from '../paint/stamps'
 import { setClayMarks } from '../pottery/clayMarks'
 import { resetHydration } from '../pottery/hydration'
-import { AMOUNT_DEFAULT, BUBBLES_START, marksFromBubbles, type ClayMarks, type PrepStep } from '../prep/prep'
+import { AMOUNT_DEFAULT, marksFromBubbles, rollPrep, type ClayMarks, type PrepStep } from '../prep/prep'
 import type { CrackleRecipe, HandleRecipe, HoleRecipe, PieceRecipe } from './persistence'
 import type { AnimalId, Order } from '../village/animals'
 import type { ReactionLevel } from '../village/traits'
@@ -87,13 +87,21 @@ export interface PrepState {
   amount: number
   /** bolhas que ainda estão na massa */
   bubbles: number
+  /** bolhas com que a massa nasceu (sorteado a cada peça) */
+  bubblesStart: number
+  /** arremessos para tirar todas as bolhas (3 a 10, sorteado) e os já feitos */
+  throwsNeeded: number
+  throws: number
+  /** semente da peça: posição das bolhas e as irregularidades da bola que vai ao torno */
+  seed: number
   /** a massa já está achatada pelo rolo (pode dobrar) */
   flat: boolean
   folds: number
 }
 
 function initialPrep(): PrepState {
-  return { step: 'cut', amount: AMOUNT_DEFAULT, bubbles: BUBBLES_START, flat: false, folds: 0 }
+  const { seed, throwsNeeded, bubbles } = rollPrep()
+  return { step: 'cut', amount: AMOUNT_DEFAULT, bubbles, bubblesStart: bubbles, throwsNeeded, throws: 0, seed, flat: false, folds: 0 }
 }
 
 const UNDO_LIMIT = 20
@@ -314,7 +322,8 @@ export const useGameStore = create<GameState>((set, get) => ({
     // a bola chega ao torno úmida e lisinha
     resetHydration()
     set({
-      profile: createBallProfile(prep.amount),
+      // cada preparo dá uma bola diferente (irregularidades suaves sorteadas pela semente)
+      profile: createBallProfile(prep.amount, prep.seed),
       marks,
       undoStack: [],
       sponge: 'off',

@@ -47,11 +47,11 @@ export function dipSponge() {
 }
 
 /**
- * Botão da esponja e tecla E: pega a esponja (já molhada); se ela secou, molha de novo;
- * se ainda tem água, guarda.
+ * Botão da esponja e tecla E: liga e desliga. Pegar já vem molhada; com ela na mão (mesmo seca)
+ * guarda. Para molhar a esponja seca sem guardar, é só clicar ou tocar no balde.
  */
 export function toggleSponge() {
   const { sponge, setSponge } = useGameStore.getState()
-  if (sponge === 'wet') setSponge('off')
+  if (sponge !== 'off') setSponge('off')
   else dipSponge()
 }

@@ -19,6 +19,24 @@ export const MODEL_FILES: { atelier: string | null } = {
   atelier: null,
 }
 
+/**
+ * Bichinhos da vila (GLB otimizado a partir dos OBJ de docs/characters).
+ * Convenção: pés em y = 0, altura 1, olhando para +z, uma malha só (sem esqueleto).
+ * Quem não tem arquivo usa o bichinho provisório feito em código (village/AnimalModel).
+ */
+export const CHARACTER_FILES: Record<string, string | null> = {
+  capi: 'models/characters/capi.glb',
+  tata: 'models/characters/tata.glb',
+  tuco: 'models/characters/tuco.glb',
+  rosinha: 'models/characters/rosinha.glb',
+  guara: 'models/characters/guara.glb',
+  soneca: 'models/characters/soneca.glb',
+  mica: null, // fora do elenco por enquanto (ver ANIMALS em village/animals.ts)
+}
+
 export function modelUrl(path: string) {
   return import.meta.env.BASE_URL + path
 }
+
+/** Decodificador Draco servido pelo próprio site (cópia de three/examples/jsm/libs/draco/gltf) */
+export const DRACO_PATH = import.meta.env.BASE_URL + 'draco/'

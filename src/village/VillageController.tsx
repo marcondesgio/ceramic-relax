@@ -3,15 +3,16 @@ import { useFrame } from '@react-three/fiber'
 import { MathUtils } from 'three'
 import { useGameStore } from '../store/useGameStore'
 import { playEffect } from '../audio/sounds'
+import { potteryRuntime } from '../pottery/potteryRuntime'
 import { canKnock, restoreVisit, scheduleAfterDelivery, startVisit } from './village'
-import { FACE_ROOM, ROUTES, onLastLeg, stepWalk, villageRuntime as rt, walk } from './villageRuntime'
+import { FACE_ROOM, ROUTES, TAKE_LEN, TAKE_START, onLastLeg, stepWalk, villageRuntime as rt, walk } from './villageRuntime'
 
 // Conduz a visita a cada quadro:
 // toc-toc → porta abre e o bichinho entra → pede → espera ao lado do torno →
-// (entrega) vai até a mesinha → reage → vai embora pela porta.
+// (entrega) vai até a mesinha → reage → guarda a peça na sacolinha → vai embora pela porta.
 
 const KNOCK_TIME = 1.3
-export const REACT_TIME = 3.2
+export const REACT_TIME = 3.6
 /** Primeira visita da sessão: logo depois de começar uma peça */
 const FIRST_KNOCK_DELAY = 3000
 /** Voltar para a modelagem chama o próximo logo */
@@ -84,13 +85,23 @@ export function VillageController() {
           }
         }
         break
-      case 'reacting':
+      case 'reacting': {
+        // a peça pula da mesinha para a sacolinha depois dos pulinhos de alegria;
+        // com "reduzir animações" ela some num brilho logo no começo
+        const k = s.settings.reduceMotion ? (rt.stageT > 0.3 ? 1 : -1) : rt.stageT < TAKE_START ? -1 : Math.min(1, (rt.stageT - TAKE_START) / TAKE_LEN)
+        if (k >= 1 && rt.take < 1) {
+          rt.puff.t = 0
+          rt.puff.pos.copy(s.settings.reduceMotion ? potteryRuntime.carrier.position : rt.bagMouth)
+          playEffect('pop', { rate: 1.4, volume: 0.5 })
+        }
+        rt.take = k
         if (rt.stageT > REACT_TIME) {
           s.setVisit({ ...visit, stage: 'leaving' })
           rt.stageT = 0
           walk(ROUTES.leaveFromShelf)
         }
         break
+      }
       case 'leaving':
         if (onLastLeg()) rt.doorTarget = 1
         if (rt.arrived) {

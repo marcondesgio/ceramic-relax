@@ -1,5 +1,6 @@
 import type { PrepStep } from './prep'
-import { AMOUNT_MAX, BUBBLES_START } from './prep'
+import { AMOUNT_MAX } from './prep'
+export { amountScale } from './prep'
 
 // Medidas da bancada (espaço local: centro do tampo da mesinha, y = 0 no tampo)
 // e o estado de cada quadro do preparo, fora do React.
@@ -23,7 +24,7 @@ export const SLAB_T0 = 0.26 // espessura da massa recém-arremessada
 export const SLAB_T1 = 0.08 // espessura quando está bem achatada
 const SLAB_L1 = 0.84 // comprimento quando está bem achatada
 export const SLAB_VOLUME = SLAB_W * SLAB_L1 * SLAB_T1
-export const PIN_R = 0.055
+export const PIN_R = 0.07
 
 /** Durações (s); com "reduzir animações" ficam bem curtas */
 export const CUT_TIME = 0.8
@@ -31,11 +32,6 @@ export const CUT_DOWN = 0.35
 export const FOLD_TIME = 0.55
 export const MORPH_TIME = 0.35
 export const READY_TIME = 0.5
-
-/** Escala visual da massa conforme a quantidade (o volume cresce com o cubo) */
-export function amountScale(amount: number) {
-  return Math.cbrt(amount)
-}
 
 /** Posição x do fio para uma quantidade */
 export function wireXFor(amount: number) {
@@ -129,5 +125,3 @@ export function enterStep(step: PrepStep, amount: number, folds: number) {
   if (step === 'ready') r.readyT = 0
 }
 
-/** Quantas bolhas aparecem desenhadas (as que estouraram somem com animação) */
-export const BUBBLE_COUNT = BUBBLES_START

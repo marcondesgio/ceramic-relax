@@ -1,8 +1,8 @@
 {
   "home": {
-    "title1": "Ceramic",
-    "title2": "Relax",
-    "tagline": "Um cantinho para modelar argila sem pressa.",
+    "title1": "Cafuné",
+    "title2": "Atelier",
+    "tagline": "um ateliê de cerâmica aconchegante",
     "start": "Começar",
     "note": "Sem pontuação, sem tempo, sem erro."
   },
@@ -62,8 +62,8 @@
       "topTouch": "Arraste no topo para esticar · toque no topo para abrir a boca",
       "spongeDesktop": "Segure o clique sobre a peça para molhar a argila",
       "spongeTouch": "Segure o dedo sobre a peça para molhar a argila",
-      "spongeEmptyDesktop": "A esponja secou: aperte E ou clique no balde para molhar de novo",
-      "spongeEmptyTouch": "A esponja secou: toque na esponja para molhar de novo",
+      "spongeEmptyDesktop": "A esponja secou: clique no balde para molhar de novo (E guarda a esponja)",
+      "spongeEmptyTouch": "A esponja secou: guarde e pegue de novo para molhar (ou toque no balde)",
       "dryingDesktop": "A argila está ficando opaca: aperte E para pegar a esponja",
       "dryingTouch": "A argila está ficando opaca: toque na esponja"
     },
@@ -290,6 +290,7 @@
     "anyPiece": "Qualquer peça vale: {{name}} vai adorar.",
     "earned": "+{{coins}} moedinhas · você tem {{total}}",
     "deliver": "Entregar para {{name}}",
+    "tookPiece": "{{name}} levou a peça para casa na sacolinha.",
     "animals": {
       "capi": {
         "name": "Capi",
@@ -420,7 +421,7 @@
   "shop": {
     "open": "Lojinha",
     "title": "Lojinha",
-    "intro": "Troque as moedinhas dos bichinhos por novidades para o ateliê. O rostinho no item mostra quem tem um pedido especial esperando por ele.",
+    "intro": "Troque as moedinhas dos bichinhos por novidades para o ateliê. A estrelinha no item mostra que um bichinho tem um pedido especial esperando por ele.",
     "close": "Fechar a lojinha",
     "coinsLabel": "Você tem {{n}} moedinhas",
     "owned": "Já é seu",

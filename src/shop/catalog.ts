@@ -58,7 +58,7 @@ const soon = (id: string, category: ShopCategory, price: number, challenge?: Ani
 
 export const CATALOG_ITEMS: ShopItem[] = [
   // cores extras (30 a 60)
-  item('color-gold', 'colors', 60, 'mica', 'gold'),
+  item('color-gold', 'colors', 60, 'rosinha', 'gold'),
   item('color-aqua', 'colors', 40, 'rosinha', 'aqua'),
   item('color-wine', 'colors', 50, 'guara', 'wine'),
   item('color-navy', 'colors', 45, 'soneca', 'navy'),
@@ -72,7 +72,7 @@ export const CATALOG_ITEMS: ShopItem[] = [
   item('stamp-cloud', 'stamps', 45, 'soneca', 'cloud'),
   item('stamp-mushroom', 'stamps', 50, 'capi', 'mushroom'),
   item('stamp-cactus', 'stamps', 45, 'guara', 'cactus'),
-  item('stamp-butterfly', 'stamps', 70, 'mica', 'butterfly'),
+  item('stamp-butterfly', 'stamps', 70, 'tata', 'butterfly'),
   item('stamp-sun', 'stamps', 65, 'tuco', 'sun'),
   item('stamp-cherry', 'stamps', 40, 'capi', 'cherry'),
   // ferramentas de acabamento (80 a 150; ripador horizontal e furo redondo são gratuitos)
@@ -92,7 +92,7 @@ export const CATALOG_ITEMS: ShopItem[] = [
   soon('shape-deep-plate', 'shapes', 60, 'tata'),
   soon('shape-goblet', 'shapes', 90, 'guara'),
   // argilas (120 a 150)
-  soon('clay-terracotta', 'clays', 120, 'mica'),
+  soon('clay-terracotta', 'clays', 120),
   soon('clay-porcelain', 'clays', 150, 'rosinha'),
   soon('clay-black', 'clays', 140, 'guara'),
   // decoração do ateliê (50 a 150)
