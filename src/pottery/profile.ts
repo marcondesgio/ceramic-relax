@@ -1,6 +1,8 @@
 // Perfil da peça: 64 raios (um por faixa de altura) + altura total + profundidade da boca.
 // Todas as medidas estão em unidades de mundo (1 unidade ≈ 10 cm).
 
+import { amountScale, seededRandom } from '../prep/prep'
+
 export const PROFILE_SAMPLES = 64
 
 export const WALL = 0.14 // espessura da parede quando a boca está aberta
@@ -28,17 +30,63 @@ export interface ProfileSnapshot {
   mouthDepth: number
 }
 
-/** Bola de argila inicial: um montinho arredondado, mais largo no meio */
-export function createBallProfile(): Profile {
+/** Raio e altura da bola padrão (quantidade 1) */
+export const BALL_R = 0.85
+export const BALL_H = 1.25
+
+/**
+ * Bola de argila inicial: um montinho arredondado, mais largo no meio.
+ * `amount` é a quantidade escolhida no preparo (1 = bola padrão); o volume cresce
+ * na mesma proporção, então raio e altura crescem pela raiz cúbica.
+ * Com `seed`, a bola sai do preparo irregular, diferente a cada peça: mais alta ou mais
+ * baixinha e com barriguinhas e cinturas suaves (queda gaussiana), mantendo a mesma
+ * quantidade de argila. Sem `seed`, é a bola redondinha de sempre.
+ */
+export function createBallProfile(amount = 1, seed?: number): Profile {
+  const k = amountScale(amount)
   const radii = new Float32Array(PROFILE_SAMPLES)
-  const R = 0.85
+  const R = BALL_R * k
   for (let i = 0; i < PROFILE_SAMPLES; i++) {
     const t = i / (PROFILE_SAMPLES - 1)
     radii[i] = R * (0.9 + 0.2 * Math.sin(Math.PI * t)) * Math.sqrt(1 - 0.78 * t ** 3)
   }
-  const profile: Profile = { radii, height: 1.25, mouthDepth: 0, clayVolume: 0, version: 0 }
+  const profile: Profile = { radii, height: BALL_H * k, mouthDepth: 0, clayVolume: 0, version: 0 }
+  if (seed !== undefined) deformBall(profile, seed)
   profile.clayVolume = computeClayVolume(profile)
   return profile
+}
+
+/** Irregularidades da bola recém-preparada (ver createBallProfile) */
+function deformBall(p: Profile, seed: number) {
+  const rand = seededRandom(seed)
+  const volume = computeClayVolume(p)
+  // proporção: de baixinha e larga a alta e estreita
+  p.height *= 0.82 + rand() * 0.4
+  // 3 ou 4 calombos e cinturas ao longo da altura, sempre suaves
+  const bumps = Array.from({ length: 3 + Math.floor(rand() * 2) }, () => ({
+    c: 0.08 + rand() * 0.84,
+    w: 0.1 + rand() * 0.14,
+    a: (rand() * 2 - 1) * 0.17,
+  }))
+  for (let i = 0; i < PROFILE_SAMPLES; i++) {
+    const t = i / (PROFILE_SAMPLES - 1)
+    let f = 1
+    for (const b of bumps) f += b.a * Math.exp(-(((t - b.c) / b.w) ** 2))
+    p.radii[i] *= f
+  }
+  // devolve a quantidade escolhida (o volume cresce com o raio ao quadrado)
+  const s = Math.sqrt(volume / computeClayVolume(p))
+  for (let i = 0; i < PROFILE_SAMPLES; i++) p.radii[i] *= s
+  // não passa da borda do torno: estreita e compensa na altura (mesmo volume)
+  let widest = 0
+  for (let i = 0; i < PROFILE_SAMPLES; i++) widest = Math.max(widest, p.radii[i])
+  const limit = R_MAX - 0.12
+  if (widest > limit) {
+    const n = limit / widest
+    for (let i = 0; i < PROFILE_SAMPLES; i++) p.radii[i] *= n
+    p.height = Math.min(H_MAX, p.height / (n * n))
+  }
+  for (let i = 0; i < PROFILE_SAMPLES; i++) p.radii[i] = Math.max(R_MIN, p.radii[i])
 }
 
 export function snapshotOf(p: Profile): ProfileSnapshot {

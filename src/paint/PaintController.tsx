@@ -9,7 +9,8 @@ import { potteryRuntime } from '../pottery/potteryRuntime'
 import { MAX_ANGULAR_SPEED } from '../wheel/wheelRuntime'
 import { fillBucket, paintBand, paintSegment, paintStamp, stampRepeatCount, type SurfacePoint } from './brushes'
 import { beginStroke, endStroke, isStrokeActive } from './paintHistory'
-import { flushSurfaces, type Side } from './paintSurface'
+import { flushSurfaces, type SurfaceId } from './paintSurface'
+import { handlesRuntime } from '../finishing/handles'
 import { BAND_HALF, BRUSH_RADIUS, PALETTE, STAMP_RADIUS } from './palette'
 
 const MIN_SPIN = 0.05
@@ -18,6 +19,10 @@ const BUCKET_SECONDS = 0.8 // tempo da cor "escorrendo" com o torno girando
 interface Hit extends SurfacePoint {
   point: Vector3
   normal: Vector3
+  /** onde pintar: lado da peça ou as alças */
+  surface: SurfaceId
+  /** unidades de mundo que cabem no canvas inteiro em V */
+  length: number
 }
 
 /**
@@ -38,36 +43,54 @@ export function PaintController() {
     hover: false,
     /** último ponto pintado no gesto atual (liga os traços) */
     last: null as SurfacePoint | null,
+    /** superfície do traço atual (trocar de superfície começa um traço novo) */
+    lastSurface: null as SurfaceId | null,
     /** carimbo/balde: uma aplicação por toque */
     applied: false,
     bandsWarned: false,
     lastSwish: 0,
     pointerType: 'mouse',
   })
-  const bucket = useRef<{ side: Side; color: string; progress: number } | null>(null)
+  const bucket = useRef<{ side: SurfaceId; color: string; progress: number } | null>(null)
 
-  /** Raycast no lado ativo da peça */
+  /** Raycast no lado ativo da peça (por fora, as alças também recebem tinta) */
   const pick = (cx: number, cy: number): Hit | null => {
     const side = useGameStore.getState().paint.side
     const mesh = side === 'outer' ? potteryRuntime.outer : potteryRuntime.inner
     const group = potteryRuntime.group
     if (!mesh || !group) return null
     setRayFromClient(raycaster, camera, gl.domElement, cx, cy)
-    const h = raycaster.intersectObject(mesh, false)[0]
+    const targets = side === 'outer' ? [mesh, ...handlesRuntime.meshes.filter((m) => m.visible)] : [mesh]
+    const h = raycaster.intersectObjects(targets, false)[0]
     if (!h?.uv) return null
+    const normal = h.face ? h.face.normal.clone().transformDirection(h.object.matrixWorld) : new Vector3(0, 0, 1)
+    if (h.object !== mesh) {
+      // alça: U = volta do rolinho (o raio é a espessura), V = faixa do tubo no canvas
+      const { thickness, paintLength } = h.object.userData as { thickness: number; paintLength: number }
+      return { u: h.uv.x, v: h.uv.y, r: thickness, point: h.point, normal, surface: 'handle', length: paintLength }
+    }
     group.worldToLocal(tmp.local.copy(h.point))
-    const normal = h.face ? h.face.normal.clone().transformDirection(mesh.matrixWorld) : new Vector3(0, 0, 1)
-    return { u: h.uv.x, v: h.uv.y, r: Math.hypot(tmp.local.x, tmp.local.z), point: h.point, normal }
+    const length = side === 'outer' ? potteryRuntime.outerLength : potteryRuntime.innerLength
+    return { u: h.uv.x, v: h.uv.y, r: Math.hypot(tmp.local.x, tmp.local.z), point: h.point, normal, surface: side, length }
   }
 
   /** Aplica a ferramenta atual num ponto tocado; `spinDu` = quanto a peça girou desde o último ponto */
   const applyAt = (hit: Hit, spinDu?: number) => {
     const s = useGameStore.getState()
     const st = input.current
-    const { tool, size, color, stamp, side } = s.paint
+    const { tool, size, color, stamp } = s.paint
     const hex = PALETTE[color].hex
-    const length = side === 'outer' ? potteryRuntime.outerLength : potteryRuntime.innerLength
-    const spinning = s.wheelSpeed > MIN_SPIN
+    const side = hit.surface
+    const length = hit.length
+    const onHandle = side === 'handle'
+    // na alça o torno não faz anéis nem repete carimbos: a alça gira junto com o dedo parado
+    const spinning = s.wheelSpeed > MIN_SPIN && !onHandle
+    // passou da peça para a alça (ou o contrário): começa um traço novo
+    if (st.lastSurface !== side) {
+      if (isStrokeActive() && !bucket.current) endStroke()
+      st.last = null
+      st.lastSurface = side
+    }
     let painted = false
     // houve traço contínuo (pincel, borracha, faixas) neste ponto
     let stroked = false
@@ -84,6 +107,8 @@ export function PaintController() {
         break
       }
       case 'bands': {
+        // faixas são anéis em volta da peça: na alça não se aplicam
+        if (onHandle) break
         // faixas só existem com o torno girando
         if (!spinning) {
           if (!st.bandsWarned) s.showToast('painting.toast.bandsNeedSpin')
@@ -93,6 +118,7 @@ export function PaintController() {
         }
         if (!isStrokeActive()) beginStroke(side)
         paintBand(side, length, (st.last ?? hit).v, hit.v, BAND_HALF[size], hex)
+        if (!s.paint.bandsUsed) s.updatePaint({ bandsUsed: true })
         st.last = { u: hit.u, v: hit.v, r: hit.r }
         painted = true
         stroked = true
@@ -103,6 +129,7 @@ export function PaintController() {
         beginStroke(side)
         const count = spinning ? stampRepeatCount(hit.r, STAMP_RADIUS[size]) : 1
         paintStamp(side, length, hit, stamp, STAMP_RADIUS[size], hex, count)
+        if (!s.paint.stampsUsed.includes(stamp)) s.updatePaint({ stampsUsed: [...s.paint.stampsUsed, stamp] })
         endStroke()
         // um pop (ou uma cascatinha de pops quando o carimbo se repete ao redor)
         for (let k = 0; k < Math.min(count, 4); k++) {
@@ -157,6 +184,7 @@ export function PaintController() {
       st.x = e.clientX
       st.y = e.clientY
       st.last = null
+      st.lastSurface = null
       st.applied = false
       st.bandsWarned = false
       const hit = pick(e.clientX, e.clientY)
@@ -231,7 +259,7 @@ export function PaintController() {
 
     // torno girando com o dedo parado: a superfície passa por baixo e o traço vira anel.
     // A peça gira +θ, então o ponto da tela anda −θ/2π em U.
-    if (pressed && hit && s.wheelSpeed > MIN_SPIN && s.paint.tool !== 'stamp' && s.paint.tool !== 'bucket') {
+    if (pressed && hit && hit.surface !== 'handle' && s.wheelSpeed > MIN_SPIN && s.paint.tool !== 'stamp' && s.paint.tool !== 'bucket') {
       const turned = (s.wheelSpeed * MAX_ANGULAR_SPEED * Math.min(delta, 0.1)) / (Math.PI * 2)
       applyAt(hit, -turned)
     }

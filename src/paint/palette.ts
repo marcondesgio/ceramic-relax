@@ -13,7 +13,22 @@ export const PALETTE = [
   { id: 'lilac', hex: '#D7BCE8' },
   { id: 'caramel', hex: '#C99A6E' },
   { id: 'graphite', hex: '#6E6A72' },
+  // cores extras da lojinha (sempre no fim: os índices das 12 primeiras nunca mudam)
+  { id: 'gold', hex: '#E5B95A' },
+  { id: 'aqua', hex: '#8FD5C9' },
+  { id: 'wine', hex: '#A14E63' },
+  { id: 'navy', hex: '#566FA0' },
+  { id: 'mustard', hex: '#D9A646' },
+  { id: 'blush', hex: '#DCA0A8' },
 ] as const
+
+/** As 12 cores da paleta fixa são gratuitas; as seguintes vêm da lojinha */
+export const BASE_COLORS = 12
+
+/** Índice de uma cor da paleta pelo id */
+export function colorIndex(id: string) {
+  return PALETTE.findIndex((c) => c.id === id)
+}
 
 export type BrushSize = 'S' | 'M' | 'L'
 

@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGameStore, wheelLevel } from '../store/useGameStore'
 import { Button } from './Button'
-import { BrushIcon, HomeIcon, UndoIcon } from './Icons'
+import { toggleSponge } from '../pottery/sponge'
+import { CheckIcon, HomeIcon, SpongeIcon, UndoIcon } from './Icons'
 import { Pedal } from './Pedal'
 import { WheelIndicator } from './WheelIndicator'
 import { TopControls } from './TopControls'
@@ -12,6 +13,8 @@ import { useIsTouch } from './useIsTouch'
 function ModelingHint({ touch }: { touch: boolean }) {
   const { t } = useTranslation()
   const spinning = useGameStore((s) => wheelLevel(s.wheelSpeed) > 0)
+  const sponge = useGameStore((s) => s.sponge)
+  const drying = useGameStore((s) => s.clayDrying)
   const [tip, setTip] = useState(0)
 
   useEffect(() => {
@@ -21,7 +24,19 @@ function ModelingHint({ touch }: { touch: boolean }) {
   }, [spinning])
 
   const device = touch ? 'Touch' : 'Desktop'
-  const key = !spinning ? `stopped${device}` : tip === 0 ? `side${device}` : `top${device}`
+  // esponja na mão ou argila secando têm prioridade (a umidade só aparece assim e na cor)
+  const key =
+    sponge === 'wet'
+      ? `sponge${device}`
+      : sponge === 'empty'
+        ? `spongeEmpty${device}`
+        : drying
+          ? `drying${device}`
+          : !spinning
+            ? `stopped${device}`
+            : tip === 0
+              ? `side${device}`
+              : `top${device}`
   return (
     <div className="hint" key={key} role="status">
       {t(`modeling.hint.${key}`)}
@@ -34,6 +49,7 @@ export function ModelingHUD() {
   const { t } = useTranslation()
   const touch = useIsTouch()
   const canUndo = useGameStore((s) => s.undoStack.length > 0)
+  const sponge = useGameStore((s) => s.sponge)
   const undo = useGameStore((s) => s.undo)
   const setPhase = useGameStore((s) => s.setPhase)
 
@@ -54,6 +70,16 @@ export function ModelingHUD() {
           <UndoIcon />
           <span>{t('common.undo')}</span>
         </button>
+        {/* pega a esponja já molhada; se secou, molha de novo; se tem água, guarda (tecla E) */}
+        <button
+          type="button"
+          className={`tool${sponge !== 'off' ? ' is-active' : ''}`}
+          aria-pressed={sponge !== 'off'}
+          onClick={toggleSponge}
+        >
+          <SpongeIcon />
+          <span>{t('modeling.sponge')}</span>
+        </button>
       </div>
 
       {!touch && (
@@ -68,7 +94,7 @@ export function ModelingHUD() {
       )}
 
       <div className="hud__ready">
-        <Button variant="primary" icon={<BrushIcon />} onClick={() => setPhase('painting')}>
+        <Button variant="primary" icon={<CheckIcon />} onClick={() => setPhase('finishing')}>
           {t('modeling.ready')}
         </Button>
       </div>

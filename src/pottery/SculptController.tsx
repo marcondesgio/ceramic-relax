@@ -5,6 +5,7 @@ import { useGameStore } from '../store/useGameStore'
 import { haptic } from '../app/haptics'
 import { playEffect } from '../audio/sounds'
 import { setRayFromClient } from './pick'
+import { clayGive } from './hydration'
 import { outerRadiusAt } from './profile'
 import { potteryRuntime } from './potteryRuntime'
 import { deepenMouth, deformRadius, relaxVolume, smoothProfile, stretch } from './sculpt'
@@ -132,7 +133,8 @@ export function SculptController() {
     }
 
     const onDown = (e: PointerEvent) => {
-      if (!modeling()) return
+      // com a esponja na mão o toque molha a argila (HydrationController), não molda
+      if (!modeling() || useGameStore.getState().sponge !== 'off') return
       if (e.pointerType === 'mouse' && e.button !== 0) return // botão direito fica para a câmera
       try {
         el.setPointerCapture(e.pointerId)
@@ -261,6 +263,7 @@ export function SculptController() {
     } else {
       op = 'none'
     }
+    if (s.sponge !== 'off') op = 'none'
 
     if (op === 'top') {
       const dy = py - st.lastY
@@ -276,7 +279,8 @@ export function SculptController() {
         const dist = camera.position.distanceTo(potteryRuntime.group!.getWorldPosition(tmp.v))
         const worldPerPx = (2 * dist * Math.tan((camera.fov * Math.PI) / 360)) / gl.domElement.clientHeight
         beginStroke()
-        stretch(profile, -dy * worldPerPx * 0.9)
+        // argila seca cede menos; com água demais, um pouco mais
+        stretch(profile, -dy * worldPerPx * 0.9 * clayGive(profile, profile.height))
         feedback(false)
         cursor.active = true
       }
@@ -305,7 +309,7 @@ export function SculptController() {
       if (y !== null && spinning) {
         beginStroke()
         const rate = op === 'thin' ? -THIN_RATE : WIDEN_RATE
-        const atLimit = deformRadius(profile, y, rate * speed * dt)
+        const atLimit = deformRadius(profile, y, rate * speed * dt * clayGive(profile, y))
         if (atLimit) potteryRuntime.jitter = 1
         feedback(atLimit)
         // torno rápido alisa mais

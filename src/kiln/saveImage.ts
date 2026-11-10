@@ -1,8 +1,10 @@
 import { PerspectiveCamera, Vector3 } from 'three'
+import { GAME_NAME, GAME_SLUG } from '../app/brand'
 import { sceneRuntime } from '../scene/sceneRuntime'
 import { useGameStore } from '../store/useGameStore'
 import { SHELF_TOP, pieceSize, shelfScale } from './kilnLayout'
 import { renderToCanvas } from './renderToCanvas'
+import { potteryRuntime } from '../pottery/potteryRuntime'
 
 // PNG 1080 × 1350 (bom para redes sociais): foto da peça na prateleira,
 // moldura creme arredondada e o logo pequeno no canto.
@@ -29,7 +31,7 @@ function photoCamera(aspect: number) {
 }
 
 function drawLogo(ctx: CanvasRenderingContext2D, right: number, bottom: number) {
-  const text = 'Ceramic Relax'
+  const text = GAME_NAME
   ctx.font = '800 34px "Baloo 2", "Nunito", sans-serif'
   const tw = ctx.measureText(text).width
   const pillH = 64
@@ -57,16 +59,38 @@ function drawLogo(ctx: CanvasRenderingContext2D, right: number, bottom: number) 
   ctx.fillText(text, x + 76, y + pillH / 2 + 2)
 }
 
+/**
+ * A foto é sempre da peça na mesinha: depois que um bichinho a levou na sacolinha, ela volta
+ * ao lugar só durante a foto (nada aparece na tela).
+ */
+function withPieceOnShelf<T>(draw: () => T): T {
+  const c = potteryRuntime.carrierObject
+  if (!c) return draw()
+  const visible = c.visible
+  const position = c.position.clone()
+  const scale = c.scale.x
+  c.visible = true
+  c.position.copy(SHELF_TOP)
+  c.scale.setScalar(shelfScale(useGameStore.getState().profile))
+  try {
+    return draw()
+  } finally {
+    c.visible = visible
+    c.position.copy(position)
+    c.scale.setScalar(scale)
+  }
+}
+
 /** Gera o PNG final */
 export async function captureResultImage(): Promise<Blob> {
   const { gl, scene } = sceneRuntime
   if (!gl || !scene) throw new Error('cena indisponível')
   // a fonte do logo precisa estar carregada antes de desenhar no canvas
-  await document.fonts.load('800 34px "Baloo 2"').catch(() => undefined)
+  await document.fonts.load('800 34px "Baloo 2"', GAME_NAME).catch(() => undefined)
 
   const pw = W - BORDER * 2
   const ph = H - BORDER * 2
-  const photo = renderToCanvas(gl, scene, photoCamera(pw / ph), pw, ph)
+  const photo = withPieceOnShelf(() => renderToCanvas(gl, scene, photoCamera(pw / ph), pw, ph))
 
   const out = document.createElement('canvas')
   out.width = W
@@ -112,10 +136,10 @@ export async function captureResultImage(): Promise<Blob> {
  * senão baixa o PNG.
  */
 export async function shareOrDownload(blob: Blob, preferShare: boolean) {
-  const file = new File([blob], 'ceramic-relax.png', { type: 'image/png' })
+  const file = new File([blob], `${GAME_SLUG}.png`, { type: 'image/png' })
   if (preferShare && navigator.canShare?.({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], title: 'Ceramic Relax' })
+      await navigator.share({ files: [file], title: GAME_NAME })
       return 'shared' as const
     } catch (e) {
       // o jogador fechou a folha de compartilhar: não é erro

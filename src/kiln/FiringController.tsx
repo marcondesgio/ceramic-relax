@@ -8,12 +8,14 @@ import { applyGlazeLook, glazeUniforms, resetGlaze } from '../paint/glazeMateria
 import { playEffect } from '../audio/sounds'
 import { T, firingPath, firingPose, type FiringPath, type FiringPose } from './firing'
 import { kilnRuntime } from './kilnRuntime'
+import { villageRuntime } from '../village/villageRuntime'
 
 /** Estado compartilhado com os efeitos (vapor, estrelinhas) */
 export const firingFx = { steam: 0, stars: 0 }
 
 /**
- * Conduz a animação do forno (6 a 8 s) e mantém a peça na prateleira no resultado.
+ * Conduz a animação do forno (6 a 8 s) e mantém a peça na prateleira no resultado
+ * (até um bichinho levar a peça entregue na sacolinha).
  * Fora dessas fases, devolve a peça ao torno e o esmalte ao estado cru.
  */
 export function FiringController() {
@@ -62,6 +64,23 @@ export function FiringController() {
       carrier.position.copy(p.position)
       carrier.scale = p.scale
       carrier.visible = p.visible
+
+      // peça entregue: pula da mesinha para a sacolinha do bichinho e vai embora com ele
+      if (s.phase === 'result' && s.deliveredTo) {
+        // fora da própria entrega (já foi embora, outro bichinho chegou, o jogo foi reaberto)
+        // a peça já não está mais aqui
+        const v = s.visit
+        const handing = !!v && (v.stage === 'delivering' || v.stage === 'reacting')
+        const take = handing ? villageRuntime.take : 1
+        if (take >= 1) carrier.visible = false
+        else if (take >= 0) {
+          const e = take * take * (3 - 2 * take)
+          carrier.position.lerpVectors(p.position, villageRuntime.bagMouth, e)
+          carrier.position.y += Math.sin(Math.PI * e) * 0.8
+          // encolhe ao entrar na sacola
+          carrier.scale = p.scale * (1 - 0.8 * e)
+        }
+      }
       kilnRuntime.doorOpen = p.doorOpen
       kilnRuntime.heat = p.heat
       kilnRuntime.thermo = p.thermo

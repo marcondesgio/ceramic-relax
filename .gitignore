@@ -1,3 +1,8 @@
 node_modules
 dist
 *.log
+
+# originais dos personagens (OBJ de ~100 MB e texturas 4K): ficam só na máquina de quem gera os GLB
+# (o jogo usa public/models/characters/*.glb, gerados por tools/blender/process_character.py)
+docs/characters/**/*.obj
+docs/characters/**/texture_pbr_*.png

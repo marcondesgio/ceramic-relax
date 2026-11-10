@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { useGameStore } from '../store/useGameStore'
 import { Button } from './Button'
 import { OptionsIcon, SoundIcon, SoundOffIcon } from './Icons'
+import { OrderChip } from './VillageHUD'
 
 /**
  * Botões do canto superior direito presentes em todas as telas:
- * `before` (ex.: desfazer, PT/EN), som liga/desliga e opções.
+ * pedido em andamento, `before` (ex.: desfazer, PT/EN), som liga/desliga e opções.
  */
 export function TopControls({ before, sound = true }: { before?: ReactNode; sound?: boolean }) {
   const { t } = useTranslation()
@@ -16,6 +17,8 @@ export function TopControls({ before, sound = true }: { before?: ReactNode; soun
 
   return (
     <div className="top-controls">
+      {/* pedido do bichinho em andamento (abre o cartão) */}
+      <OrderChip />
       {before}
       {sound && (
         <Button

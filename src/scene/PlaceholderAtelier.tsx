@@ -24,7 +24,6 @@ import {
 import { Landscape, windowClipPlanes } from './Landscape'
 import { PottedPlant } from './PottedPlant'
 import { timeRuntime } from './timeOfDay'
-import { WallShelf } from './WallShelf'
 
 // Ateliê provisório com formas simples: usado enquanto não há GLB (ver scene/models.ts)
 
@@ -280,8 +279,6 @@ export function PlaceholderAtelier() {
       <Room />
       <Window />
       <LightBeam />
-      {/* entre a janela e o forno, onde a câmera enxerga */}
-      <WallShelf position={[1.1, 0, -4.2]} />
       <PottedPlant position={[-5.7, 0, -3.6]} />
     </group>
   )

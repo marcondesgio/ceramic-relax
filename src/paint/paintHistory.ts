@@ -1,4 +1,4 @@
-import { PAINT_SIZE, getSurface, markDirty, type Side } from './paintSurface'
+import { PAINT_SIZE, getSurface, markDirty, type SurfaceId } from './paintSurface'
 
 // Desfazer da pintura (até 20 passos). Para economizar memória no celular,
 // cada passo guarda só o retângulo que o traço mudou, e não o canvas inteiro.
@@ -6,7 +6,7 @@ import { PAINT_SIZE, getSurface, markDirty, type Side } from './paintSurface'
 const LIMIT = 20
 
 interface Entry {
-  side: Side
+  side: SurfaceId
   x: number
   y: number
   data: ImageData
@@ -21,12 +21,12 @@ before.width = PAINT_SIZE
 before.height = PAINT_SIZE
 const beforeCtx = before.getContext('2d', { willReadFrequently: true })!
 
-let active: { side: Side; x0: number; y0: number; x1: number; y1: number } | null = null
+let active: { side: SurfaceId; x0: number; y0: number; x1: number; y1: number } | null = null
 
 const notify = () => listeners.forEach((fn) => fn())
 
 /** Começa um passo de desfazer: fotografa o canvas do lado que vai ser pintado */
-export function beginStroke(side: Side) {
+export function beginStroke(side: SurfaceId) {
   if (active) endStroke()
   beforeCtx.clearRect(0, 0, PAINT_SIZE, PAINT_SIZE)
   beforeCtx.drawImage(getSurface(side).canvas, 0, 0)

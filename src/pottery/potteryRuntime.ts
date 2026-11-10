@@ -14,6 +14,8 @@ export const potteryRuntime = {
    * Com `override` falso a peça fica no torno.
    */
   carrier: { override: false, position: new Vector3(), scale: 1, visible: true },
+  /** grupo que leva a peça (a foto do resultado mostra a peça mesmo depois de entregue) */
+  carrierObject: null as Group | null,
   /** rotação da peça no forno e na prateleira (o jogador pode girar) */
   displayAngle: 0,
   /** comprimento do perfil de cada lado (mapeia V da pintura em unidades de mundo) */

@@ -14,8 +14,9 @@ function prng(seed: number) {
   }
 }
 
-async function render(seconds: number, build: Build) {
-  const ctx = new OfflineAudioContext(1, Math.ceil(seconds * RATE), RATE)
+/** `rate`: os efeitos usam 22.050 Hz; a música usa 44.100 Hz (agudos limpos, sem serrilhado) */
+async function render(seconds: number, build: Build, rate = RATE) {
+  const ctx = new OfflineAudioContext(1, Math.ceil(seconds * rate), rate)
   build(ctx)
   return ctx.startRendering()
 }

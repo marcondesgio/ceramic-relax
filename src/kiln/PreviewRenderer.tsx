@@ -6,6 +6,7 @@ import { applyGlazeLook, getGlazeMaterials } from '../paint/glazeMaterial'
 import { potteryRuntime } from '../pottery/potteryRuntime'
 import { wheelRuntime } from '../wheel/wheelRuntime'
 import { pieceSize } from './kilnLayout'
+import { handlesRuntime } from '../finishing/handles'
 import { renderToCanvas } from './renderToCanvas'
 
 const SIZE = 480
@@ -39,6 +40,8 @@ export function PreviewRenderer() {
       const mats = getGlazeMaterials()
       const piece = new Group()
       piece.add(new Mesh(outer.geometry, mats.outer), new Mesh(inner.geometry, mats.inner))
+      // alças do acabamento (já no espaço da peça)
+      for (const h of handlesRuntime.meshes) if (h.visible) piece.add(new Mesh(h.geometry, mats.handle))
       piece.rotation.y = wheelRuntime.angle
       scene.add(piece)
 

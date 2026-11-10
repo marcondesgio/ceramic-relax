@@ -2,7 +2,8 @@ import { useEffect, useRef, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGameStore, type PaintTool } from '../store/useGameStore'
 import { PALETTE, type BrushSize } from '../paint/palette'
-import { STAMPS, stampDetail, stampPath, type StampId } from '../paint/stamps'
+import { stampDetail, stampPath, type StampId } from '../paint/stamps'
+import { unlockedStamps } from '../shop/unlocks'
 import { BandsIcon, BrushIcon, BucketIcon, EraserIcon, StarIcon } from './Icons'
 
 export const TOOLS: { id: PaintTool; icon: ReactNode; key: string }[] = [
@@ -69,13 +70,12 @@ export function ToolBar({ layout }: { layout: 'column' | 'row' }) {
 }
 
 /** Miniatura do carimbo, desenhada com o mesmo vetor usado na peça */
-function StampPreview({ id, color }: { id: StampId; color: string }) {
+export function StampPreview({ id, color, size = 32 }: { id: StampId; color: string; size?: number }) {
   const ref = useRef<HTMLCanvasElement>(null)
   useEffect(() => {
     const c = ref.current
     if (!c) return
     const dpr = Math.min(2, window.devicePixelRatio || 1)
-    const size = 32
     c.width = size * dpr
     c.height = size * dpr
     const ctx = c.getContext('2d')!
@@ -87,8 +87,8 @@ function StampPreview({ id, color }: { id: StampId; color: string }) {
     ctx.fill(stampPath(id))
     stampDetail(ctx, id)
     ctx.restore()
-  }, [id, color])
-  return <canvas ref={ref} style={{ width: 32, height: 32 }} aria-hidden="true" />
+  }, [id, color, size])
+  return <canvas ref={ref} style={{ width: size, height: size }} aria-hidden="true" />
 }
 
 /** Escolha do carimbo (aparece quando a ferramenta Carimbos está ativa) */
@@ -97,10 +97,11 @@ export function StampPicker() {
   const stamp = useGameStore((s) => s.paint.stamp)
   const color = useGameStore((s) => PALETTE[s.paint.color].hex)
   const updatePaint = useGameStore((s) => s.updatePaint)
+  const purchases = useGameStore((s) => s.purchases)
 
   return (
     <div className="stamp-picker card" role="group" aria-label={t('painting.stampLabel')}>
-      {STAMPS.map((id) => (
+      {unlockedStamps(purchases).map((id) => (
         <button
           key={id}
           type="button"

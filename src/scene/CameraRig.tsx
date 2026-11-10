@@ -19,6 +19,8 @@ const CHOOSE_LOOK = new Vector3(0.2, 1.7, -0.6)
 const CHOOSE_LOOK_PORTRAIT = new Vector3(KILN_POS.x, 2.9, KILN_POS.z)
 // prateleira: de frente, um pouco acima
 const SHELF_DIR = new Vector3(0, 0.28, 1).normalize()
+// preparo na bancada: de cima e de frente, para ver o bloco, as bolhas e o rolo
+const PREP_DIR = new Vector3(0, 0.95, 1).normalize()
 
 /** Calcula para onde a câmera olha e de onde, conforme a fase e o formato da tela */
 function framing(
@@ -37,6 +39,12 @@ function framing(
   if (phase === 'home') {
     outLook.set(0, 1.7, -0.5)
     outPos.set(0, 2.9, portrait ? 13 : 8.4)
+    return
+  }
+  if (phase === 'prep') {
+    // no celular a bancada sobe na tela (botões embaixo)
+    outLook.set(SHELF_TOP.x, SHELF_TOP.y + 0.3 - (portrait ? 0.55 : 0), SHELF_TOP.z)
+    outPos.copy(PREP_DIR).multiplyScalar(portrait ? 3.4 * widthFactor : 3.6).add(outLook)
     return
   }
   if (phase === 'kiln') {

@@ -1,0 +1,88 @@
+/* ---------- preparo da argila ---------- */
+.prep-hud__bottom {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--gap) + var(--safe-bottom));
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 2 * var(--gap));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+/* etapas: Quantidade · Bolhas · Rolo */
+.prep-steps {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.prep-steps li {
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: rgba(255, 251, 245, 0.85);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-soft);
+  transition: background 200ms;
+}
+.prep-steps li.is-active {
+  background: var(--peach);
+  color: var(--text-strong);
+}
+.prep-steps li.is-done {
+  background: var(--sage);
+  color: var(--text);
+}
+
+/* referências P / M / G */
+.prep-refs button {
+  min-width: 112px;
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 4px 12px;
+  line-height: 1.1;
+}
+.prep-refs small {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.prep-hud__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* celular: tudo na metade de baixo, botões largos ao alcance do polegar */
+.hud--touch .prep-hud__bottom {
+  left: var(--gap);
+  right: var(--gap);
+  transform: none;
+  width: auto;
+}
+.hud--touch .prep-refs {
+  width: 100%;
+}
+.hud--touch .prep-refs button {
+  flex: 1;
+  min-width: 0;
+}
+.hud--touch .prep-hud__actions {
+  width: 100%;
+}
+.hud--touch .prep-hud__actions .btn {
+  flex: 1;
+  min-height: 60px;
+  font-size: 17px;
+  white-space: nowrap;
+}
